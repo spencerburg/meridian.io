@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Meridian Daily</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Meridian: ten geography prompts a day. Any correct answer counts, and rarer answers sail you farther along Columbus's 1492 route.">
+<meta property="og:title" content="Meridian Daily">
+<meta property="og:description" content="A daily geography voyage in ten prompts.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 21h24l-4 6H8z' fill='%231c2733'/%3E%3Cpath d='M15 4v17M9 8v13' stroke='%231c2733' stroke-width='1.5'/%3E%3Cpath d='M16 5c4 3 4 9 0 13zM10 9c3 2 3 7 0 9z' fill='%23b1362a'/%3E%3C/svg%3E">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a period sea chart of the 1492 voyage across the top, the ship's log (prompt card) below, one narrow column. */
+:root {
+  --bg: #e3e8e4; --surface: #f6f4ec; --ink: #1c2733; --muted: #5f6a70; --line: #c5ccc8;
+  --sea: #d3e1e1; --land: #ebe0c2; --coast: #8b7a55; --grid: #a9bcbc; --route: #b1362a;
+  --accent: #23486b; --accent-ink: #ffffff; --brass: #a26f14; --good: #2b7a57; --common: #6c8796;
+  --display: "IM Fell English SC", "Iowan Old Style", Georgia, serif;
+  --fell: "IM Fell English", "Iowan Old Style", Georgia, serif;
+  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0d1720; --surface: #14212b; --ink: #e8e2d2; --muted: #95a1a7; --line: #263642;
+  --sea: #10283a; --land: #3a3426; --coast: #9c8a5c; --grid: #24435a; --route: #e46d5e;
+  --accent: #8fb9de; --accent-ink: #0b1620; --brass: #e2b04e; --good: #5fc08f; --common: #84a0b0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0d1720; --surface: #14212b; --ink: #e8e2d2; --muted: #95a1a7; --line: #263642;
+  --sea: #10283a; --land: #3a3426; --coast: #9c8a5c; --grid: #24435a; --route: #e46d5e;
+  --accent: #8fb9de; --accent-ink: #0b1620; --brass: #e2b04e; --good: #5fc08f; --common: #84a0b0; color-scheme: dark }
+
+* { box-sizing: border-box }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; min-height: 100vh;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px }
+header { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap }
+.brand { font-family: var(--display); font-weight: 400; font-size: 2.3rem; line-height: 1; margin: 0; letter-spacing: 0.01em }
+.brand small { display: block; font-family: var(--fell); font-style: italic; font-size: 0.95rem; color: var(--muted); letter-spacing: 0; margin-top: 4px }
+.stamp { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); text-align: right; line-height: 1.45; text-transform: uppercase; letter-spacing: 0.06em }
+.stamp b { color: var(--ink); font-weight: 600 }
+
+/* chart */
+.chart { background: var(--sea); border: 1px solid var(--coast); border-radius: 4px; padding: 6px; box-shadow: inset 0 0 0 3px var(--surface), inset 0 0 0 4px var(--coast) }
+.chart svg { display: block; width: 100%; height: auto }
+.land { fill: var(--land); stroke: var(--coast); stroke-width: 0.8; stroke-linejoin: round }
+.isle { fill: var(--land); stroke: var(--coast); stroke-width: 0.6 }
+.grid { stroke: var(--grid); stroke-width: 0.5; fill: none }
+.rhumb { stroke: var(--grid); stroke-width: 0.4; opacity: .8 }
+.rose path { fill: var(--surface); stroke: var(--coast); stroke-width: 0.6 }
+.rose path.dk { fill: var(--coast) }
+.course { fill: none; stroke: var(--route); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .55 }
+.sailed { fill: none; stroke: var(--route); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round }
+.ms { fill: var(--surface); stroke: var(--route); stroke-width: 1.2 }
+.ms.hit { fill: var(--route) }
+.lbl { font-family: var(--fell); font-size: 12px; fill: var(--ink) }
+.lbl-sub { font-family: var(--mono); font-size: 8.5px; fill: var(--muted) }
+.sea-lbl { font-family: var(--fell); font-style: italic; font-size: 17px; fill: var(--accent); opacity: .55; letter-spacing: 4px }
+.land-lbl { font-family: var(--display); font-size: 11px; fill: var(--coast); letter-spacing: 2px }
+.deg { font-family: var(--mono); font-size: 7.5px; fill: var(--muted) }
+.hull { fill: var(--ink) } .sail { fill: var(--surface); stroke: var(--ink); stroke-width: 0.7 } .mast { stroke: var(--ink); stroke-width: 1 } .pennant { fill: var(--route) }
+.fleet { fill: var(--accent); opacity: .5 }
+@media (max-width: 520px) { .lbl { font-size: 23px } .lbl-sub, .deg { display: none } .sea-lbl { font-size: 22px } .land-lbl { font-size: 15px } }
+
+.voyage { display: flex; justify-content: space-between; align-items: baseline; gap: 6px 16px; flex-wrap: wrap }
+.leagues { font-family: var(--display); font-size: 1.5rem; line-height: 1; font-variant-numeric: tabular-nums }
+.leagues small { font-family: var(--fell); font-style: italic; font-size: 1rem; color: var(--muted) }
+.nextmark { font-family: var(--fell); font-style: italic; color: var(--muted); font-size: 1rem }
+.ticks { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px }
+.tick { height: 6px; border-radius: 1px; background: var(--line) }
+.tick.now { background: var(--ink) }
+.b-rare { background: var(--brass) } .b-good { background: var(--good) } .b-common { background: var(--common) } .b-zero { background: var(--route) }
+.c-rare { color: var(--brass) } .c-good { color: var(--good) } .c-common { color: var(--common) } .c-zero { color: var(--route) }
+
+/* log card */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 22px; display: flex; flex-direction: column; gap: 16px }
+.qhead { display: flex; justify-content: space-between; align-items: center; gap: 4px 10px; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; flex-wrap: wrap }
+.cat { color: var(--accent) }
+.sea.d1 { color: var(--good) } .sea.d2 { color: var(--brass) } .sea.d3 { color: var(--route) }
+.prompt { font-family: var(--fell); font-weight: 400; font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.15; margin: 0; text-wrap: balance }
+.sub { margin: -6px 0 0; color: var(--muted); font-size: 0.92rem }
+.ans { display: flex; gap: 10px; flex-wrap: wrap }
+.ans input { flex: 1 1 240px; min-width: 0; font: 600 1.15rem var(--body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 6px; padding: 12px 14px; outline: none }
+.ans input:focus { border-color: var(--accent) }
+.msg { font-size: 0.88rem; color: var(--muted); min-height: 1.3em; margin: -6px 0 0 }
+.msg.warn { color: var(--route) }
+.skip { background: none; border: 0; padding: 0; font: 500 0.85rem var(--body); color: var(--muted); text-decoration: underline; cursor: pointer; align-self: flex-start }
+.btn { font: 600 1rem var(--body); border-radius: 6px; padding: 12px 20px; cursor: pointer; border: 1.5px solid var(--accent); background: var(--accent); color: var(--accent-ink) }
+.btn:hover { filter: brightness(1.08) }
+.btn.ghost { background: transparent; color: var(--accent) }
+.btn:focus-visible, .ans input:focus-visible, .skip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+
+.reveal { display: flex; flex-direction: column; gap: 14px }
+.verdict { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 16px; border-radius: 6px; background: var(--bg) }
+.verdict .you { font-family: var(--fell); font-size: 1.45rem; line-height: 1.15 }
+.verdict .tag { font-size: 0.8rem; color: var(--muted) }
+.verdict .pts { font-family: var(--display); font-size: 2rem; line-height: 1; font-variant-numeric: tabular-nums; text-align: right }
+.verdict .pts small { display: block; font-family: var(--fell); font-style: italic; font-size: 0.8rem; color: var(--muted) }
+.h { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin: 0 }
+.bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px }
+.bars li { display: grid; grid-template-columns: minmax(0, 1fr) 2fr 44px; gap: 10px; align-items: center; font-size: 0.9rem }
+.bars .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.bars .tr { height: 10px; background: var(--bg); border-radius: 2px; overflow: hidden }
+.bars .fl { display: block; height: 100%; background: var(--common); border-radius: 2px }
+.bars li.me .nm { font-weight: 600 } .bars li.me .fl { background: var(--accent) }
+.bars .pc { font-family: var(--mono); font-size: 0.8rem; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted) }
+.chips { display: flex; flex-wrap: wrap; gap: 6px }
+.chip { font-size: 0.85rem; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px }
+.row-end { display: flex; justify-content: flex-end }
+
+.score-big { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap }
+.score-big .n { font-family: var(--display); font-size: clamp(3.4rem, 14vw, 4.6rem); line-height: .9; font-variant-numeric: tabular-nums }
+.score-big .of { font-family: var(--fell); font-style: italic; color: var(--muted); font-size: 1.1rem }
+.rank { margin: 0; font-family: var(--fell); font-size: 1.15rem; max-width: 52ch }
+.breakdown { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column }
+.breakdown li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 0.9rem }
+.breakdown li:last-child { border-bottom: 0 }
+.breakdown .sw { width: 12px; height: 12px; border-radius: 2px }
+.breakdown .q { min-width: 0; display: flex; flex-direction: column }
+.breakdown .q small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.breakdown .p { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600 }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px }
+.stat { display: flex; flex-direction: column; gap: 2px }
+.stat .v { font-family: var(--display); font-size: 1.6rem; font-variant-numeric: tabular-nums; line-height: 1.1 }
+.stat .l { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted) }
+.share { font-family: var(--mono); white-space: pre; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font-size: 0.9rem; overflow-x: auto; margin: 0 }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center }
+.next { font-family: var(--mono); font-size: 0.8rem; color: var(--muted) }
+.foot { font-size: 0.82rem; color: var(--muted); text-align: center; max-width: 60ch; margin: 0 auto }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; font-size: 0.78rem; color: var(--muted) }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px }
+.practice-tag { display: inline-block; font-family: var(--mono); font-size: 0.7rem; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--brass); color: var(--brass); padding: 1px 6px; border-radius: 4px }
+@media (prefers-reduced-motion: no-preference) { .card { animation: rise .25s ease-out } @keyframes rise { from { transform: translateY(6px) } to { transform: none } } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 class="brand">Meridian<small>A daily voyage in ten prompts</small></h1>
+    <div class="stamp" id="stamp"></div>
+  </header>
+  <div class="chart" id="chart"></div>
+  <div class="voyage"><span class="leagues" id="leagues">0 <small>leagues sailed</small></span><span class="nextmark" id="nextmark"></span></div>
+  <div class="ticks" id="ticks"></div>
+  <main id="app"></main>
+  <p class="foot">Ten geography prompts a day, the same for everyone: three in calm seas, four in choppy waters and three in stormy seas. Any correct answer counts. The fewer players who give the same answer, the more leagues it earns, up to 100 a prompt. Sail 1,000 leagues to follow Columbus from Palos to La Navidad.</p>
+  <div class="legend"><span><i class="b-rare"></i>Rare, 80+</span><span><i class="b-good"></i>Uncommon, 50+</span><span><i class="b-common"></i>Common</span><span><i class="b-zero"></i>Miss</span></div>
+</div>
+
+<script>
+// ---------- places ----------
+// name | aliases | continents (first = primary) | capitals | flags (L landlocked, I island nation, digit = how often people name it 1-3)
+const COUNTRY_DATA = `
+Algeria||AF|Algiers|2
+Angola||AF|Luanda|1
+Benin||AF|Porto-Novo|1
+Botswana||AF|Gaborone|L1
+Burkina Faso||AF|Ouagadougou|L1
+Burundi||AF|Gitega;Bujumbura|L1
+Cabo Verde|Cape Verde|AF|Praia|I1
+Cameroon||AF|Yaoundé|1
+Central African Republic|CAR|AF|Bangui|L1
+Chad||AF|N'Djamena|L1
+Comoros||AF|Moroni|I1
+Democratic Republic of the Congo|DR Congo;DRC;Congo-Kinshasa|AF|Kinshasa|2
+Republic of the Congo|Congo;Congo-Brazzaville;Congo Republic|AF|Brazzaville|1
+Djibouti||AF|Djibouti|1
+Egypt||AF,AS|Cairo|3
+Equatorial Guinea||AF|Malabo|1
+Eritrea||AF|Asmara|1
+Eswatini|Swaziland|AF|Mbabane;Lobamba|L1
+Ethiopia||AF|Addis Ababa|L2
+Gabon||AF|Libreville|1
+Gambia|The Gambia|AF|Banjul|1
+Ghana||AF|Accra|2
+Guinea||AF|Conakry|1
+Guinea-Bissau||AF|Bissau|1
+Côte d'Ivoire|Ivory Coast|AF|Yamoussoukro|1
+Kenya||AF|Nairobi|3
+Lesotho||AF|Maseru|L1
+Liberia||AF|Monrovia|1
+Libya||AF|Tripoli|2
+Madagascar||AF|Antananarivo|I2
+Malawi||AF|Lilongwe|L1
+Mali||AF|Bamako|L1
+Mauritania||AF|Nouakchott|1
+Mauritius||AF|Port Louis|I1
+Morocco||AF|Rabat|3
+Mozambique||AF|Maputo|1
+Namibia||AF|Windhoek|1
+Niger||AF|Niamey|L1
+Nigeria||AF|Abuja|3
+Rwanda||AF|Kigali|L1
+São Tomé and Príncipe|Sao Tome|AF|São Tomé|I1
+Senegal||AF|Dakar|1
+Seychelles||AF|Victoria|I1
+Sierra Leone||AF|Freetown|1
+Somalia||AF|Mogadishu|2
+South Africa||AF|Pretoria;Cape Town;Bloemfontein|3
+South Sudan||AF|Juba|L1
+Sudan||AF|Khartoum|2
+Tanzania||AF|Dodoma|2
+Togo||AF|Lomé|1
+Tunisia||AF|Tunis|2
+Uganda||AF|Kampala|L1
+Zambia||AF|Lusaka|L1
+Zimbabwe||AF|Harare|L2
+Afghanistan||AS|Kabul|L2
+Armenia||AS,EU|Yerevan|L1
+Azerbaijan||AS,EU|Baku|L1
+Bahrain||AS|Manama|I1
+Bangladesh||AS|Dhaka|1
+Bhutan||AS|Thimphu|L1
+Brunei||AS|Bandar Seri Begawan|1
+Cambodia||AS|Phnom Penh|1
+China||AS|Beijing|3
+Cyprus||EU,AS|Nicosia|I1
+Georgia||AS,EU|Tbilisi|1
+India||AS|New Delhi|3
+Indonesia||AS|Jakarta|I2
+Iran||AS|Tehran|2
+Iraq||AS|Baghdad|2
+Israel||AS|Jerusalem|2
+Japan||AS|Tokyo|I3
+Jordan||AS|Amman|1
+Kazakhstan||AS,EU|Astana|L1
+Kuwait||AS|Kuwait City|1
+Kyrgyzstan||AS|Bishkek|L1
+Laos||AS|Vientiane|L1
+Lebanon||AS|Beirut|1
+Malaysia||AS|Kuala Lumpur;Putrajaya|1
+Maldives||AS|Malé|I1
+Mongolia||AS|Ulaanbaatar|L1
+Myanmar|Burma|AS|Naypyidaw|1
+Nepal||AS|Kathmandu|L1
+North Korea||AS|Pyongyang|2
+Oman||AS|Muscat|1
+Pakistan||AS|Islamabad|2
+Palestine||AS||1
+Philippines||AS|Manila|I2
+Qatar||AS|Doha|1
+Saudi Arabia||AS|Riyadh|2
+Singapore||AS|Singapore|I2
+South Korea|Korea|AS|Seoul|2
+Sri Lanka||AS|Sri Jayawardenepura Kotte;Colombo|I1
+Syria||AS|Damascus|1
+Taiwan||AS|Taipei|I1
+Tajikistan||AS|Dushanbe|L1
+Thailand||AS|Bangkok|2
+Timor-Leste|East Timor|AS|Dili|I1
+Türkiye|Turkey|AS,EU|Ankara|2
+Turkmenistan||AS|Ashgabat|L1
+United Arab Emirates|UAE|AS|Abu Dhabi|1
+Uzbekistan||AS|Tashkent|L1
+Vietnam||AS|Hanoi|2
+Yemen||AS|Sanaa;Sana'a|1
+Russia||EU,AS|Moscow|3
+Albania||EU|Tirana|1
+Andorra||EU|Andorra la Vella|L1
+Austria||EU|Vienna|L2
+Belarus||EU|Minsk|L1
+Belgium||EU|Brussels|2
+Bosnia and Herzegovina|Bosnia|EU|Sarajevo|1
+Bulgaria||EU|Sofia|1
+Croatia||EU|Zagreb|1
+Czechia|Czech Republic|EU|Prague|L1
+Denmark||EU|Copenhagen|2
+Estonia||EU|Tallinn|1
+Finland||EU|Helsinki|2
+France||EU|Paris|3
+Germany||EU|Berlin|3
+Greece||EU|Athens|2
+Hungary||EU|Budapest|L1
+Iceland||EU|Reykjavík|I2
+Ireland||EU|Dublin|I2
+Italy||EU|Rome|3
+Kosovo||EU|Pristina|L1
+Latvia||EU|Riga|1
+Liechtenstein||EU|Vaduz|L1
+Lithuania||EU|Vilnius|1
+Luxembourg||EU|Luxembourg|L1
+Malta||EU|Valletta|I1
+Moldova||EU|Chișinău|L1
+Monaco||EU|Monaco|1
+Montenegro||EU|Podgorica|1
+Netherlands|Holland|EU|Amsterdam|2
+North Macedonia|Macedonia|EU|Skopje|L1
+Norway||EU|Oslo|2
+Poland||EU|Warsaw|2
+Portugal||EU|Lisbon|2
+Romania||EU|Bucharest|1
+San Marino||EU|San Marino|L1
+Serbia||EU|Belgrade|L1
+Slovakia||EU|Bratislava|L1
+Slovenia||EU|Ljubljana|1
+Spain||EU|Madrid|3
+Sweden||EU|Stockholm|2
+Switzerland||EU|Bern|L2
+Ukraine||EU|Kyiv;Kiev|2
+United Kingdom|UK;Britain;Great Britain|EU|London|I3
+Vatican City|Vatican;Holy See|EU|Vatican City|L1
+Antigua and Barbuda||NA|St. John's|I1
+Bahamas|The Bahamas|NA|Nassau|I1
+Barbados||NA|Bridgetown|I1
+Belize||NA|Belmopan|1
+Canada||NA|Ottawa|3
+Costa Rica||NA|San José|1
+Cuba||NA|Havana|I2
+Dominica||NA|Roseau|I1
+Dominican Republic||NA|Santo Domingo|I1
+El Salvador||NA|San Salvador|1
+Grenada||NA|St. George's|I1
+Guatemala||NA|Guatemala City|1
+Haiti||NA|Port-au-Prince|I1
+Honduras||NA|Tegucigalpa|1
+Jamaica||NA|Kingston|I2
+Mexico||NA|Mexico City|3
+Nicaragua||NA|Managua|1
+Panama||NA|Panama City|1
+Saint Kitts and Nevis||NA|Basseterre|I1
+Saint Lucia||NA|Castries|I1
+Saint Vincent and the Grenadines||NA|Kingstown|I1
+Trinidad and Tobago||NA|Port of Spain|I1
+United States|USA;US;America;United States of America|NA|Washington, D.C.;Washington|3
+Argentina||SA|Buenos Aires|3
+Bolivia||SA|Sucre;La Paz|L1
+Brazil||SA|Brasília|3
+Chile||SA|Santiago|2
+Colombia||SA|Bogotá|2
+Ecuador||SA|Quito|1
+Guyana||SA|Georgetown|1
+Paraguay||SA|Asunción|L1
+Peru||SA|Lima|2
+Suriname||SA|Paramaribo|1
+Uruguay||SA|Montevideo|1
+Venezuela||SA|Caracas|2
+Australia||OC|Canberra|3
+Fiji||OC|Suva|I1
+Kiribati||OC|Tarawa;South Tarawa|I1
+Marshall Islands||OC|Majuro|I1
+Micronesia|Federated States of Micronesia|OC|Palikir|I1
+Nauru||OC|Yaren|I1
+New Zealand||OC|Wellington|I2
+Palau||OC|Ngerulmud|I1
+Papua New Guinea|PNG|OC|Port Moresby|I1
+Samoa||OC|Apia|I1
+Solomon Islands||OC|Honiara|I1
+Tonga||OC|Nukuʻalofa;Nukualofa|I1
+Tuvalu||OC|Funafuti|I1
+Vanuatu||OC|Port Vila|I1`;
+
+const STATE_DATA = "Alabama1 Alaska3 Arizona2 Arkansas1 California3 Colorado2 Connecticut1 Delaware1 Florida3 Georgia2 Hawaii3 Idaho1 Illinois2 Indiana1 Iowa1 Kansas1 Kentucky1 Louisiana2 Maine2 Maryland1 Massachusetts2 Michigan2 Minnesota2 Mississippi2 Missouri1 Montana2 Nebraska1 Nevada2 New_Hampshire1 New_Jersey2 New_Mexico2 New_York3 North_Carolina2 North_Dakota1 Ohio2 Oklahoma1 Oregon2 Pennsylvania2 Rhode_Island1 South_Carolina1 South_Dakota1 Tennessee1 Texas3 Utah1 Vermont1 Virginia2 Washington3 West_Virginia1 Wisconsin1 Wyoming1";
+
+const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/&/g, " and ")
+  .replace(/['’ʻ`.]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/^the /, "").replace(/\bst\b/g, "saint");
+const W = { 1: 1, 2: 4, 3: 12 };
+const SPELLING_ALTS = new Set(["Kiev", "Sana'a", "Nukualofa", "Washington", "South Tarawa", "Bujumbura"]);
+
+const COUNTRIES = COUNTRY_DATA.trim().split("\n").map(line => {
+  const [name, al, co, cap, fl] = line.split("|");
+  return { name, aliases: al ? al.split(";") : [], conts: co.split(","), caps: cap ? cap.split(";") : [],
+    land: fl.includes("L"), island: fl.includes("I"), fame: +fl.replace(/\D/g, "") || 1 };
+});
+const BY_NAME = new Map(); COUNTRIES.forEach(c => [c.name, ...c.aliases].forEach(n => BY_NAME.set(norm(n), c)));
+// "Name<fame digit>|alias;alias" — fame defaults to 1
+const parseFamed = s => { const [head, al] = s.split("|"); const m = head.trim().match(/^(.*?)(\d)?$/); return { name: m[1].replace(/_/g, " ").trim(), fame: +(m[2] || 1), aliases: al ? al.split(";") : [] }; };
+const STATES = STATE_DATA.split(" ").map(parseFamed);
+const STATE_BY = new Map(STATES.map(s => [s.name, s]));
+
+// ---------- answer builders ----------
+const countryAns = c => ({ key: norm(c.name), label: c.name, aliases: c.aliases, w: W[c.fame] });
+function countries(names, extra = {}){
+  return names.map(n => {
+    if (extra[n]) return { key: norm(n), label: n, aliases: extra[n].aliases || [], w: W[extra[n].fame || 2] };
+    const c = BY_NAME.get(norm(n)); if (!c) { console.warn("Unknown country", n); return null; }
+    return countryAns(c);
+  }).filter(Boolean);
+}
+const capitalAns = c => ({ key: norm(c.caps[0]), label: c.caps[0], aliases: c.caps.slice(1), w: W[c.fame] });
+const famedAns = p => ({ key: norm(p.name), label: p.name, aliases: p.aliases, w: W[p.fame] });
+const states = names => names.map(n => { const s = STATE_BY.get(n); if (!s) console.warn("Unknown state", n); return famedAns(s); });
+const items = str => str.split(",").map(s => famedAns(parseFamed(s)));
+const notIn = (names) => { const set = new Set(names.map(norm)); return COUNTRIES.filter(c => !set.has(norm(c.name))); };
+
+const CONT_NAME = { AF: "Africa", AS: "Asia", EU: "Europe", NA: "North America", SA: "South America", OC: "Oceania" };
+const P = (cat, q, answers, sub) => ({ cat, q, answers, sub });
+const ON_MAPS = "Its usual English name, as written on most maps.";
+
+const PROVINCES = "Ontario3,Quebec3,British Columbia3,Alberta2,Manitoba1,Saskatchewan1,Nova Scotia2,New Brunswick1,Newfoundland and Labrador1|Newfoundland,Prince Edward Island1|PEI,Yukon1,Northwest Territories1,Nunavut1";
+const AUS_STATES = "New South Wales3|NSW,Victoria3,Queensland3,South Australia1,Western Australia2,Tasmania2,Northern Territory1,Australian Capital Territory1|ACT";
+
+const BORDERS = {
+  Germany: ["Denmark", "Poland", "Czechia", "Austria", "Switzerland", "France", "Luxembourg", "Belgium", "Netherlands"],
+  France: ["Belgium", "Luxembourg", "Germany", "Switzerland", "Italy", "Monaco", "Spain", "Andorra", "Brazil", "Suriname", "Netherlands"],
+  China: ["Afghanistan", "Bhutan", "India", "Kazakhstan", "North Korea", "Kyrgyzstan", "Laos", "Mongolia", "Myanmar", "Nepal", "Pakistan", "Russia", "Tajikistan", "Vietnam"],
+  Russia: ["Norway", "Finland", "Estonia", "Latvia", "Lithuania", "Poland", "Belarus", "Ukraine", "Georgia", "Azerbaijan", "Kazakhstan", "China", "Mongolia", "North Korea"],
+  Brazil: ["Uruguay", "Argentina", "Paraguay", "Bolivia", "Peru", "Colombia", "Venezuela", "Guyana", "Suriname", "France"],
+  Austria: ["Germany", "Czechia", "Slovakia", "Hungary", "Slovenia", "Italy", "Switzerland", "Liechtenstein"],
+  Tanzania: ["Kenya", "Uganda", "Rwanda", "Burundi", "Democratic Republic of the Congo", "Zambia", "Malawi", "Mozambique"],
+  "the Democratic Republic of the Congo": ["Republic of the Congo", "Central African Republic", "South Sudan", "Uganda", "Rwanda", "Burundi", "Tanzania", "Zambia", "Angola"],
+  Serbia: ["Hungary", "Romania", "Bulgaria", "North Macedonia", "Kosovo", "Montenegro", "Bosnia and Herzegovina", "Croatia"],
+  Türkiye: ["Greece", "Bulgaria", "Georgia", "Armenia", "Azerbaijan", "Iran", "Iraq", "Syria"],
+  "Saudi Arabia": ["Jordan", "Iraq", "Kuwait", "Qatar", "United Arab Emirates", "Oman", "Yemen"],
+  India: ["Pakistan", "China", "Nepal", "Bhutan", "Bangladesh", "Myanmar"],
+  Sudan: ["Egypt", "Libya", "Chad", "Central African Republic", "South Sudan", "Ethiopia", "Eritrea"],
+  Hungary: ["Austria", "Slovakia", "Ukraine", "Romania", "Serbia", "Croatia", "Slovenia"],
+  Poland: ["Germany", "Czechia", "Slovakia", "Ukraine", "Belarus", "Lithuania", "Russia"],
+  Zambia: ["Democratic Republic of the Congo", "Tanzania", "Malawi", "Mozambique", "Zimbabwe", "Botswana", "Namibia", "Angola"],
+  Afghanistan: ["Iran", "Turkmenistan", "Uzbekistan", "Tajikistan", "China", "Pakistan"],
+  Peru: ["Ecuador", "Colombia", "Brazil", "Bolivia", "Chile"],
+  Niger: ["Algeria", "Libya", "Chad", "Nigeria", "Benin", "Burkina Faso", "Mali"],
+  Mali: ["Algeria", "Niger", "Burkina Faso", "Côte d'Ivoire", "Guinea", "Senegal", "Mauritania"],
+  Ukraine: ["Russia", "Belarus", "Poland", "Slovakia", "Hungary", "Romania", "Moldova"],
+  Spain: ["France", "Portugal", "Andorra", "Morocco", "United Kingdom"],
+  Argentina: ["Chile", "Bolivia", "Paraguay", "Brazil", "Uruguay"],
+  Iran: ["Iraq", "Türkiye", "Armenia", "Azerbaijan", "Turkmenistan", "Afghanistan", "Pakistan"],
+  Kazakhstan: ["Russia", "China", "Kyrgyzstan", "Uzbekistan", "Turkmenistan"],
+  Switzerland: ["Germany", "France", "Italy", "Austria", "Liechtenstein"],
+  "South Africa": ["Namibia", "Botswana", "Zimbabwe", "Mozambique", "Eswatini", "Lesotho"],
+  Ethiopia: ["Eritrea", "Djibouti", "Somalia", "Kenya", "South Sudan", "Sudan"],
+  Nigeria: ["Benin", "Niger", "Chad", "Cameroon"],
+  Myanmar: ["Bangladesh", "India", "China", "Laos", "Thailand"],
+  Colombia: ["Panama", "Venezuela", "Brazil", "Peru", "Ecuador"],
+  Bolivia: ["Brazil", "Paraguay", "Argentina", "Chile", "Peru"],
+  Libya: ["Egypt", "Sudan", "Chad", "Niger", "Algeria", "Tunisia"],
+  Cameroon: ["Nigeria", "Chad", "Central African Republic", "Republic of the Congo", "Gabon", "Equatorial Guinea"],
+  Italy: ["France", "Switzerland", "Austria", "Slovenia", "San Marino", "Vatican City"],
+  Belarus: ["Russia", "Ukraine", "Poland", "Lithuania", "Latvia"],
+  Romania: ["Ukraine", "Moldova", "Bulgaria", "Serbia", "Hungary"],
+  Uzbekistan: ["Kazakhstan", "Kyrgyzstan", "Tajikistan", "Afghanistan", "Turkmenistan"],
+  Guatemala: ["Mexico", "Belize", "Honduras", "El Salvador"],
+  Iraq: ["Türkiye", "Iran", "Kuwait", "Saudi Arabia", "Jordan", "Syria"],
+  Kenya: ["Ethiopia", "Somalia", "Tanzania", "Uganda", "South Sudan"],
+  Angola: ["Democratic Republic of the Congo", "Republic of the Congo", "Zambia", "Namibia"],
+  Mozambique: ["Tanzania", "Malawi", "Zambia", "Zimbabwe", "South Africa", "Eswatini"],
+  Algeria: ["Morocco", "Tunisia", "Libya", "Niger", "Mali", "Mauritania"],
+  Czechia: ["Germany", "Poland", "Slovakia", "Austria"],
+  Croatia: ["Slovenia", "Hungary", "Serbia", "Bosnia and Herzegovina", "Montenegro"],
+  Greece: ["Albania", "North Macedonia", "Bulgaria", "Türkiye"],
+  Laos: ["China", "Vietnam", "Cambodia", "Thailand", "Myanmar"],
+  Syria: ["Türkiye", "Iraq", "Jordan", "Israel", "Lebanon"],
+  Uganda: ["Kenya", "South Sudan", "Democratic Republic of the Congo", "Rwanda", "Tanzania"],
+  Chad: ["Libya", "Sudan", "Central African Republic", "Cameroon", "Nigeria", "Niger"],
+  Pakistan: ["India", "China", "Afghanistan", "Iran"],
+  Thailand: ["Myanmar", "Laos", "Cambodia", "Malaysia"],
+  Belgium: ["France", "Luxembourg", "Germany", "Netherlands"],
+};
+const BORDER_NOTES = {
+  France: "Overseas borders count: French Guiana and Saint Martin are part of France.",
+  Spain: "Ceuta, Melilla and Gibraltar count.",
+  Algeria: "Western Sahara is disputed and isn't counted.",
+};
+
+const POOLS = {
+  region: [
+    ...Object.entries(CONT_NAME).map(([k, v]) => P("Continents", `Name a country in ${v}`, COUNTRIES.filter(c => c.conts.includes(k)).map(countryAns),
+      k === "NA" ? "Central America and the Caribbean count." : k === "OC" ? "Sovereign countries only." : "Countries that span two continents count for both.")),
+    P("Regions", "Name a Nordic country", countries(["Denmark", "Finland", "Iceland", "Norway", "Sweden"])),
+    P("Regions", "Name a country in Central America", countries(["Belize", "Guatemala", "Honduras", "El Salvador", "Nicaragua", "Costa Rica", "Panama"])),
+    P("Regions", "Name a Caribbean island country", COUNTRIES.filter(c => c.conts[0] === "NA" && c.island).map(countryAns)),
+    P("Regions", "Name a country in Southeast Asia", countries(["Brunei", "Cambodia", "Indonesia", "Laos", "Malaysia", "Myanmar", "Philippines", "Singapore", "Thailand", "Timor-Leste", "Vietnam"])),
+    P("Regions", "Name a country in South Asia", countries(["Afghanistan", "Bangladesh", "Bhutan", "India", "Maldives", "Nepal", "Pakistan", "Sri Lanka"]), "The eight members of the South Asian regional bloc, SAARC."),
+    P("Regions", "Name a country in West Africa", countries(["Benin", "Burkina Faso", "Cabo Verde", "Côte d'Ivoire", "Gambia", "Ghana", "Guinea", "Guinea-Bissau", "Liberia", "Mali", "Mauritania", "Niger", "Nigeria", "Senegal", "Sierra Leone", "Togo"]), "As the UN groups the region."),
+    P("Regions", "Name a country on the Arabian Peninsula", countries(["Saudi Arabia", "Yemen", "Oman", "United Arab Emirates", "Qatar", "Bahrain", "Kuwait"])),
+    P("Regions", "Name a Pacific island country", COUNTRIES.filter(c => c.conts[0] === "OC" && c.name !== "Australia").map(countryAns)),
+    P("History", "Name a country that was once a Soviet republic", countries(["Russia", "Ukraine", "Belarus", "Moldova", "Estonia", "Latvia", "Lithuania", "Georgia", "Armenia", "Azerbaijan", "Kazakhstan", "Kyrgyzstan", "Tajikistan", "Turkmenistan", "Uzbekistan"])),
+    P("History", "Name a country that was once part of Yugoslavia", countries(["Slovenia", "Croatia", "Bosnia and Herzegovina", "Serbia", "Montenegro", "North Macedonia", "Kosovo"])),
+  ],
+  capital: Object.entries(CONT_NAME).map(([k, v]) => P("Capitals", `Name a capital city in ${v}`,
+    COUNTRIES.filter(c => c.conts[0] === k && c.caps.length).map(capitalAns), "National capitals only. Cities with shared capital status all count.")),
+  borders: Object.entries(BORDERS).map(([k, v]) => P("Neighbours", `Name a country that shares a land border with ${k}`, countries(v), BORDER_NOTES[k] || "")),
+  subnational: [
+    P("States", "Name a US state that starts with M", states(["Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana"])),
+    P("States", "Name a US state that starts with N", states(["Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota"])),
+    P("States", "Name a US state that starts with a vowel", STATES.filter(s => /^[AEIOU]/.test(s.name)).map(famedAns)),
+    P("States", "Name a US state that borders Canada", states(["Alaska", "Washington", "Idaho", "Montana", "North Dakota", "Minnesota", "Michigan", "Ohio", "Pennsylvania", "New York", "Vermont", "New Hampshire", "Maine"]), "Borders across the Great Lakes count."),
+    P("States", "Name a US state that borders Mexico", states(["California", "Arizona", "New Mexico", "Texas"])),
+    P("States", "Name a US state that touches the Mississippi River", states(["Minnesota", "Wisconsin", "Iowa", "Illinois", "Missouri", "Kentucky", "Tennessee", "Arkansas", "Mississippi", "Louisiana"])),
+    P("States", "Name one of the original 13 US states", states(["New Hampshire", "Massachusetts", "Rhode Island", "Connecticut", "New York", "New Jersey", "Pennsylvania", "Delaware", "Maryland", "Virginia", "North Carolina", "South Carolina", "Georgia"])),
+    P("States", "Name a US state that borders Tennessee", states(["Kentucky", "Virginia", "North Carolina", "Georgia", "Alabama", "Mississippi", "Arkansas", "Missouri"])),
+    P("States", "Name a US state that borders Missouri", states(["Iowa", "Illinois", "Kentucky", "Tennessee", "Arkansas", "Oklahoma", "Kansas", "Nebraska"])),
+    P("States", "Name a US state that borders Kentucky", states(["Illinois", "Indiana", "Ohio", "West Virginia", "Virginia", "Tennessee", "Missouri"])),
+    P("States", "Name a US state that borders Colorado", states(["Wyoming", "Nebraska", "Kansas", "Oklahoma", "New Mexico", "Arizona", "Utah"]), "Arizona counts: it meets Colorado at the Four Corners."),
+    P("States", "Name a US state with a Pacific coastline", states(["Alaska", "California", "Hawaii", "Oregon", "Washington"])),
+    P("States", "Name a US state with an Atlantic coastline", states(["Maine", "New Hampshire", "Massachusetts", "Rhode Island", "Connecticut", "New York", "New Jersey", "Delaware", "Maryland", "Virginia", "North Carolina", "South Carolina", "Georgia", "Florida"]), "Bays and sounds that open onto the Atlantic count."),
+    P("States", "Name a US state on the Gulf Coast", states(["Texas", "Louisiana", "Mississippi", "Alabama", "Florida"])),
+    P("States", "Name a US state on one of the Great Lakes", states(["Minnesota", "Wisconsin", "Illinois", "Indiana", "Michigan", "Ohio", "Pennsylvania", "New York"])),
+    P("States", "Name a New England state", states(["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "Connecticut"])),
+    P("States", "Name a state the Appalachian Trail passes through", states(["Georgia", "North Carolina", "Tennessee", "Virginia", "West Virginia", "Maryland", "Pennsylvania", "New Jersey", "New York", "Connecticut", "Massachusetts", "Vermont", "New Hampshire", "Maine"])),
+    P("States", "Name a US state whose name has two words", STATES.filter(s => s.name.includes(" ")).map(famedAns)),
+    P("States", "Name a US state capital", items("Montgomery1,Juneau2,Phoenix3,Little Rock2,Sacramento3,Denver3,Hartford1,Dover1,Tallahassee2,Atlanta3,Honolulu3,Boise2,Springfield2,Indianapolis2,Des Moines1,Topeka1,Frankfort1,Baton Rouge2,Augusta1,Annapolis1,Boston3,Lansing1,Saint Paul2|St. Paul,Jackson1,Jefferson City1,Helena1,Lincoln1,Carson City1,Concord1,Trenton1,Santa Fe2,Albany3,Raleigh1,Bismarck1,Columbus2,Oklahoma City2,Salem1,Harrisburg1,Providence1,Columbia1,Pierre1,Nashville3,Austin3,Salt Lake City2,Montpelier1,Richmond2,Olympia1,Charleston1,Madison1,Cheyenne1"), "The capital of any of the 50 states."),
+    P("Provinces", "Name a Canadian province or territory", items(PROVINCES)),
+    P("Provinces", "Name a Canadian province or territory that borders the United States", items("Quebec3,Ontario3,British Columbia3,New Brunswick1,Manitoba1,Saskatchewan1,Alberta2,Yukon1")),
+    P("Provinces", "Name an Australian state or territory", items(AUS_STATES)),
+    P("Provinces", "Name a German state", items("Bavaria3|Bayern,Berlin3,Hamburg3,Bremen2,Saxony2|Sachsen,Hesse1|Hessen,Baden-Württemberg2|Baden-Wurttemberg,North Rhine-Westphalia2|Nordrhein-Westfalen,Lower Saxony1|Niedersachsen,Brandenburg1,Mecklenburg-Vorpommern1|Mecklenburg-Western Pomerania,Rhineland-Palatinate1|Rheinland-Pfalz,Saarland1,Saxony-Anhalt1|Sachsen-Anhalt,Schleswig-Holstein1,Thuringia1|Thüringen"), "Any of the 16 Länder, including the city-states."),
+    P("Provinces", "Name a state of India", items("Andhra Pradesh1,Arunachal Pradesh1,Assam2,Bihar1,Chhattisgarh1,Goa3,Gujarat2,Haryana1,Himachal Pradesh1,Jharkhand1,Karnataka2,Kerala3,Madhya Pradesh1,Maharashtra2,Manipur1,Meghalaya1,Mizoram1,Nagaland1,Odisha1|Orissa,Punjab3,Rajasthan2,Sikkim1,Tamil Nadu2,Telangana1,Tripura1,Uttar Pradesh2,Uttarakhand1,West Bengal2"), "States only; union territories such as Delhi don't count."),
+    P("Provinces", "Name a state of Brazil", items("Acre1,Alagoas1,Amapá1,Amazonas3,Bahia2,Ceará1,Espírito Santo1,Goiás1,Maranhão1,Mato Grosso2,Mato Grosso do Sul1,Minas Gerais2,Pará1,Paraíba1,Paraná1,Pernambuco1,Piauí1,Rio de Janeiro3,Rio Grande do Norte1,Rio Grande do Sul1,Rondônia1,Roraima1,Santa Catarina1,São Paulo3,Sergipe1,Tocantins1,Distrito Federal1|Federal District")),
+    P("Provinces", "Name a state of Mexico", items("Aguascalientes1,Baja California2,Baja California Sur1,Campeche1,Chiapas2,Chihuahua2,Coahuila1,Colima1,Durango1,Guanajuato1,Guerrero1,Hidalgo1,Jalisco2,State of Mexico1|Estado de Mexico,Michoacán1,Morelos1,Nayarit1,Nuevo León1,Oaxaca2,Puebla1,Querétaro1,Quintana Roo2,San Luis Potosí1,Sinaloa1,Sonora2,Tabasco1,Tamaulipas1,Tlaxcala1,Veracruz1,Yucatán3,Zacatecas1,Mexico City3|CDMX")),
+  ],
+  terrain: [
+    P("Landlocked", "Name a landlocked country", COUNTRIES.filter(c => c.land).map(countryAns), "Countries on the Caspian Sea count as landlocked."),
+    P("Landlocked", "Name a landlocked country in Africa", COUNTRIES.filter(c => c.land && c.conts[0] === "AF").map(countryAns)),
+    P("Landlocked", "Name a landlocked country in Europe", COUNTRIES.filter(c => c.land && c.conts.includes("EU")).map(countryAns)),
+    P("Landlocked", "Name a landlocked country in Asia", COUNTRIES.filter(c => c.land && c.conts.includes("AS")).map(countryAns)),
+    P("Islands", "Name an island country", COUNTRIES.filter(c => c.island).map(countryAns), "Countries made up of islands, including ones that share an island with a neighbour."),
+    P("Lines", "Name a country the Equator passes through", countries(["Ecuador", "Colombia", "Brazil", "São Tomé and Príncipe", "Gabon", "Republic of the Congo", "Democratic Republic of the Congo", "Uganda", "Kenya", "Somalia", "Maldives", "Indonesia", "Kiribati"]), "Land or territorial waters."),
+    P("Lines", "Name a country the Tropic of Cancer passes through", countries(["Mexico", "Bahamas", "Mauritania", "Mali", "Algeria", "Niger", "Libya", "Egypt", "Saudi Arabia", "United Arab Emirates", "Oman", "India", "Bangladesh", "Myanmar", "China", "Taiwan"]), "Land only. Western Sahara is disputed and isn't counted."),
+    P("Lines", "Name a country the Tropic of Capricorn passes through", countries(["Chile", "Argentina", "Paraguay", "Brazil", "Namibia", "Botswana", "South Africa", "Mozambique", "Madagascar", "Australia"]), "Land only."),
+    P("Lines", "Name a country the Arctic Circle passes through", countries(["United States", "Canada", "Denmark", "Iceland", "Norway", "Sweden", "Finland", "Russia"]), "Denmark counts through Greenland; Iceland through the island of Grímsey."),
+    P("Lines", "Name a country the Prime Meridian passes through", countries(["United Kingdom", "France", "Spain", "Algeria", "Mali", "Burkina Faso", "Togo", "Ghana"])),
+  ],
+  culture: [
+    P("Language", "Name a country where Spanish is an official language", countries(["Spain", "Mexico", "Guatemala", "Honduras", "El Salvador", "Nicaragua", "Costa Rica", "Panama", "Cuba", "Dominican Republic", "Colombia", "Venezuela", "Ecuador", "Peru", "Bolivia", "Chile", "Argentina", "Uruguay", "Paraguay", "Equatorial Guinea"])),
+    P("Language", "Name a country where Portuguese is an official language", countries(["Portugal", "Brazil", "Angola", "Mozambique", "Cabo Verde", "Guinea-Bissau", "São Tomé and Príncipe", "Timor-Leste", "Equatorial Guinea"])),
+    P("Language", "Name a country where Arabic is an official language", countries(["Algeria", "Bahrain", "Comoros", "Chad", "Djibouti", "Egypt", "Iraq", "Jordan", "Kuwait", "Lebanon", "Libya", "Mauritania", "Morocco", "Oman", "Palestine", "Qatar", "Saudi Arabia", "Somalia", "Sudan", "Syria", "Tunisia", "United Arab Emirates", "Yemen"])),
+    P("Politics", "Name a member of the European Union", countries(["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"])),
+    P("Politics", "Name a NATO member", countries(["Albania", "Belgium", "Bulgaria", "Canada", "Croatia", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden", "Türkiye", "United Kingdom", "United States"])),
+    P("Politics", "Name a G7 country", countries(["United States", "Canada", "United Kingdom", "France", "Germany", "Italy", "Japan"])),
+    P("Politics", "Name a permanent member of the UN Security Council", countries(["United States", "United Kingdom", "France", "Russia", "China"])),
+    P("Politics", "Name a member of BRICS", countries(["Brazil", "Russia", "India", "China", "South Africa", "Egypt", "Ethiopia", "Iran", "United Arab Emirates", "Indonesia"]), "Full members. Saudi Arabia hasn't formally joined."),
+    P("Politics", "Name a member of OPEC", countries(["Algeria", "Republic of the Congo", "Equatorial Guinea", "Gabon", "Iran", "Iraq", "Kuwait", "Libya", "Nigeria", "Saudi Arabia", "United Arab Emirates", "Venezuela"]), "Current members. Angola left in 2024."),
+    P("Money", "Name a country that uses the euro", countries(["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Estonia", "Finland", "France", "Germany", "Greece", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Portugal", "Slovakia", "Slovenia", "Spain", "Montenegro", "Kosovo", "Andorra", "Monaco", "San Marino", "Vatican City"]), "Countries that use it without being in the eurozone count too."),
+    P("Money", "Name a country whose currency is a dollar", countries(["United States", "Canada", "Australia", "New Zealand", "Singapore", "Jamaica", "Bahamas", "Barbados", "Belize", "Brunei", "Fiji", "Guyana", "Liberia", "Namibia", "Solomon Islands", "Trinidad and Tobago", "Taiwan", "Antigua and Barbuda", "Dominica", "Grenada", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Ecuador", "El Salvador", "Panama", "Timor-Leste", "Marshall Islands", "Micronesia", "Palau", "Kiribati", "Tuvalu", "Nauru", "Zimbabwe"]), "Its own dollar or one it borrows, such as the US or Australian dollar."),
+    P("Flags", "Name a country whose flag shows the Union Jack", countries(["United Kingdom", "Australia", "New Zealand", "Fiji", "Tuvalu"])),
+    P("Flags", "Name a country whose flag is only red and white", countries(["Austria", "Bahrain", "Canada", "Denmark", "Georgia", "Indonesia", "Japan", "Latvia", "Malta", "Monaco", "Peru", "Poland", "Qatar", "Singapore", "Switzerland", "Tonga", "Tunisia", "Türkiye"]), "Ignore small details such as a coat of arms. Maroon counts as red."),
+    P("Sport", "Name a country that has hosted the Summer Olympics", countries(["Greece", "France", "United States", "United Kingdom", "Sweden", "Belgium", "Netherlands", "Germany", "Finland", "Australia", "Italy", "Japan", "Mexico", "Canada", "Russia", "South Korea", "Spain", "China", "Brazil", "Soviet Union"], { "Soviet Union": { fame: 1, aliases: ["USSR"] } })),
+    P("Sport", "Name a country that has hosted the Winter Olympics", countries(["France", "Switzerland", "United States", "Germany", "Norway", "Italy", "Austria", "Japan", "Bosnia and Herzegovina", "Yugoslavia", "Canada", "Russia", "South Korea", "China"], { Yugoslavia: { fame: 1 } }), "Sarajevo 1984 counts for Bosnia and Herzegovina or Yugoslavia."),
+    P("Sport", "Name a country that has won the men's FIFA World Cup", countries(["Uruguay", "Italy", "Germany", "Brazil", "England", "Argentina", "France", "Spain"], { England: { fame: 2 } })),
+    P("Sport", "Name a country that has hosted the men's FIFA World Cup", countries(["Uruguay", "Italy", "France", "Brazil", "Switzerland", "Sweden", "Chile", "England", "Mexico", "Germany", "Argentina", "Spain", "United States", "Japan", "South Korea", "South Africa", "Russia", "Qatar", "Canada"], { England: { fame: 2 } }), "Co-hosts count, including the 2026 tournament."),
+    P("People", "Name a country with more than 100 million people", countries(["China", "India", "United States", "Indonesia", "Pakistan", "Nigeria", "Brazil", "Bangladesh", "Russia", "Ethiopia", "Mexico", "Japan", "Egypt", "Philippines", "Democratic Republic of the Congo", "Vietnam"])),
+    P("History", "Name a country named after a person", countries(["Bolivia", "Colombia", "Philippines", "Saudi Arabia", "Marshall Islands", "Solomon Islands", "Seychelles", "Mauritius", "El Salvador", "São Tomé and Príncipe", "Saint Lucia", "Saint Kitts and Nevis", "Saint Vincent and the Grenadines", "Dominican Republic", "Liechtenstein", "United States"]), "Saints, royals and explorers count. Colombia is named for Columbus himself."),
+  ],
+  physical: [
+    P("Rivers", "Name a country the Danube flows through or along", countries(["Germany", "Austria", "Slovakia", "Hungary", "Croatia", "Serbia", "Romania", "Bulgaria", "Moldova", "Ukraine"])),
+    P("Rivers", "Name a country the Rhine flows through or along", countries(["Switzerland", "Liechtenstein", "Austria", "Germany", "France", "Netherlands"])),
+    P("Rivers", "Name a country the Mekong flows through or along", countries(["China", "Myanmar", "Laos", "Thailand", "Cambodia", "Vietnam"])),
+    P("Rivers", "Name a country the Amazon River flows through", countries(["Peru", "Colombia", "Brazil"])),
+    P("Seas", "Name a country with a Mediterranean coastline", countries(["Spain", "France", "Monaco", "Italy", "Malta", "Slovenia", "Croatia", "Bosnia and Herzegovina", "Montenegro", "Albania", "Greece", "Türkiye", "Cyprus", "Syria", "Lebanon", "Israel", "Palestine", "Egypt", "Libya", "Tunisia", "Algeria", "Morocco"])),
+    P("Seas", "Name a country on the Caspian Sea", countries(["Russia", "Kazakhstan", "Turkmenistan", "Iran", "Azerbaijan"])),
+    P("Seas", "Name a country on the Black Sea", countries(["Türkiye", "Bulgaria", "Romania", "Ukraine", "Russia", "Georgia"])),
+    P("Seas", "Name a country on the Baltic Sea", countries(["Sweden", "Finland", "Russia", "Estonia", "Latvia", "Lithuania", "Poland", "Germany", "Denmark"])),
+    P("Seas", "Name a country on the North Sea", countries(["United Kingdom", "Norway", "Denmark", "Germany", "Netherlands", "Belgium", "France"])),
+    P("Seas", "Name a country on the Adriatic Sea", countries(["Italy", "Slovenia", "Croatia", "Bosnia and Herzegovina", "Montenegro", "Albania"])),
+    P("Seas", "Name a country on the Red Sea", countries(["Egypt", "Sudan", "Eritrea", "Djibouti", "Saudi Arabia", "Yemen", "Jordan", "Israel"]), "The Gulfs of Suez and Aqaba count."),
+    P("Seas", "Name a country with a Persian Gulf coastline", countries(["Iran", "Iraq", "Kuwait", "Saudi Arabia", "Bahrain", "Qatar", "United Arab Emirates", "Oman"])),
+    P("Seas", "Name a country in the Americas with a Pacific coastline", countries(["Canada", "United States", "Mexico", "Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Panama", "Colombia", "Ecuador", "Peru", "Chile"])),
+    P("Seas", "Name an African country with an Indian Ocean coastline", countries(["South Africa", "Mozambique", "Tanzania", "Kenya", "Somalia", "Madagascar", "Mauritius", "Seychelles", "Comoros"])),
+    P("Lakes", "Name a country on Lake Victoria", countries(["Uganda", "Kenya", "Tanzania"])),
+    P("Mountains", "Name a country the Andes pass through", countries(["Venezuela", "Colombia", "Ecuador", "Peru", "Bolivia", "Chile", "Argentina"])),
+    P("Mountains", "Name a country the Himalayas pass through", countries(["India", "Nepal", "Bhutan", "China", "Pakistan"])),
+    P("Mountains", "Name a country with part of the Alps", countries(["France", "Switzerland", "Italy", "Monaco", "Liechtenstein", "Austria", "Germany", "Slovenia"])),
+    P("Mountains", "Name a country with a peak over 8,000 metres", countries(["Nepal", "China", "Pakistan", "India"])),
+    P("Forests", "Name a country with part of the Amazon rainforest", countries(["Brazil", "Peru", "Colombia", "Venezuela", "Ecuador", "Bolivia", "Guyana", "Suriname", "France"]), "France counts through French Guiana."),
+    P("Deserts", "Name a country the Sahara extends into", countries(["Algeria", "Chad", "Egypt", "Libya", "Mali", "Mauritania", "Morocco", "Niger", "Sudan", "Tunisia"])),
+  ],
+  misc: [
+    P("Waters", "Name one of the Great Lakes", items("Superior3|Lake Superior,Michigan2|Lake Michigan,Huron2|Lake Huron,Erie2|Lake Erie,Ontario2|Lake Ontario")),
+    P("Waters", "Name one of the world's five oceans", items("Pacific3|Pacific Ocean,Atlantic3|Atlantic Ocean,Indian2|Indian Ocean,Arctic2|Arctic Ocean,Southern1|Southern Ocean;Antarctic Ocean")),
+    P("Islands", "Name one of the Canary Islands", items("Tenerife3,Gran Canaria3,Lanzarote2,Fuerteventura2,La Palma1,La Gomera1|Gomera,El Hierro1|Hierro,La Graciosa1|Graciosa"), "Columbus took on water and supplies at La Gomera before crossing."),
+    P("Islands", "Name one of the main Hawaiian islands", items("Hawaii2|Big Island;Hawaii Island,Maui3,Oahu3|O'ahu,Kauai2|Kaua'i,Molokai1|Moloka'i,Lanai1|Lana'i,Niihau1|Ni'ihau,Kahoolawe1|Kaho'olawe")),
+    P("Islands", "Name one of Japan's four main islands", items("Honshu3,Hokkaido2,Kyushu1,Shikoku1")),
+    P("Islands", "Name one of the Greater Antilles", items("Cuba3,Hispaniola2,Jamaica2,Puerto Rico3"), "The four large islands of the northern Caribbean. Columbus reached all of them."),
+    P("Countries", "Name one of the countries of the United Kingdom", items("England3,Scotland2,Wales2,Northern Ireland1")),
+    P("Continents", "Name a continent", items("Africa2,Antarctica1,Asia3,Australia2|Oceania;Australasia,Europe3,North America2,South America2")),
+    P("Cities", "Name a city that has hosted the Summer Olympics", items("Athens2,Paris3,St. Louis1|Saint Louis,London3,Stockholm1,Antwerp1,Amsterdam1,Los Angeles3|LA,Berlin2,Helsinki1,Melbourne1,Rome1,Tokyo3,Mexico City1,Munich1,Montreal1,Moscow1,Seoul1,Barcelona2,Atlanta2,Sydney2,Beijing2,Rio de Janeiro2|Rio"), "Past hosts only; future hosts don't count yet."),
+    P("Capitals", "Name a European capital on the Danube", items("Vienna3,Budapest3,Bratislava1,Belgrade1")),
+    P("Capitals", "Name a Nordic capital", items("Oslo3,Stockholm3,Copenhagen3,Helsinki2,Reykjavík1")),
+  ],
+  letters: [],
+  wordplay: [],
+};
+
+// generated prompts: first letters, capital letters, name patterns
+"ABCDEGHIKLMNPSTU".split("").forEach(L => {
+  const list = COUNTRIES.filter(c => c.name[0] === L);
+  if (list.length >= 5) POOLS.letters.push(P("Letters", `Name a country that starts with ${L}`, list.map(countryAns)));
+});
+const CAPITAL_ANS = [];
+COUNTRIES.forEach(c => c.caps.forEach(cap => {
+  if (SPELLING_ALTS.has(cap)) return;
+  const alts = c.caps.filter(x => SPELLING_ALTS.has(x));
+  if (!CAPITAL_ANS.some(a => a.key === norm(cap))) CAPITAL_ANS.push({ key: norm(cap), label: cap, aliases: alts, w: W[c.fame], first: norm(cap)[0], c });
+}));
+"ABCDKLMNPST".split("").forEach(L => {
+  const list = CAPITAL_ANS.filter(a => a.first === L.toLowerCase());
+  if (list.length >= 6) POOLS.letters.push(P("Capitals", `Name a national capital that starts with ${L}`, list, "Cities with shared capital status count."));
+});
+POOLS.capital.push(P("Capitals", "Name a capital city that contains its country's name", CAPITAL_ANS.filter(a => norm(a.label).includes(norm(a.c.name))), "Like Kuwait City in Kuwait."));
+POOLS.capital.push(P("Capitals", "Name a capital city on an island", COUNTRIES.filter(c => c.island && c.caps.length).map(capitalAns), "The capital of any island country."));
+POOLS.capital.push(P("Capitals", "Name a landlocked country's capital", COUNTRIES.filter(c => c.land && c.caps.length).map(capitalAns)));
+
+const pattern = (q, fn, sub = ON_MAPS) => { const list = COUNTRIES.filter(c => fn(c.name)); if (list.length >= 3 && list.length <= 40) POOLS.wordplay.push(P("Wordplay", q, list.map(countryAns), sub)); };
+pattern("Name a country with “land” in its name", n => /land/i.test(n));
+pattern("Name a country whose name ends in -stan", n => /stan$/.test(n), "");
+pattern("Name a country whose name has four letters or fewer", n => n.replace(/\W/g, "").length <= 4);
+pattern("Name a country that starts and ends with the same letter", n => n[0].toLowerCase() === n.slice(-1).toLowerCase());
+["Q", "Z", "J", "K", "W", "V", "X"].forEach(L => pattern(`Name a country with the letter ${L} in its name`, n => n.toUpperCase().includes(L)));
+pattern("Name a country whose name ends in -ia", n => /ia$/.test(n));
+pattern("Name a country with “Guinea” in its name", n => /Guinea/.test(n), "");
+pattern("Name a country whose name is exactly three words", n => n.split(" ").length === 3);
+pattern("Name a country whose name starts with “S”, then a consonant", n => /^S[^aeiou]/i.test(n));
+pattern("Name a country whose name ends in -a, but not -ia", n => /a$/.test(n) && !/ia$/.test(n));
+POOLS.wordplay.push(P("Wordplay", "Name a country with a compass direction in its name", countries(["North Korea", "South Korea", "South Africa", "South Sudan", "North Macedonia", "Timor-Leste"]), "East Timor counts."));
+
+// ranked lists: earlier names are the ones people reach for first; suffixes add aliases like "Nile River"
+function ranked(str, forms = [], labelFn = n => n){
+  const seen = new Set();
+  return str.split(",").map(s => s.trim()).filter(Boolean).map(s => {
+    const [name, al] = s.split("|"); const aliases = al ? al.split(";") : [];
+    const label = labelFn(name); if (label !== name) aliases.push(name);
+    forms.forEach(f => aliases.push(f.replace("#", name)));
+    return { key: norm(name), label, aliases };
+  }).filter(a => !seen.has(a.key) && seen.add(a.key)).map((a, i) => ({ ...a, w: i < 5 ? W[3] : i < 15 ? W[2] : W[1] }));
+}
+const seaLabel = n => /Sea|Gulf|Bay/.test(n) ? n : n + " Sea";
+const lakeLabel = n => /Lake|Sea/.test(n) ? n : "Lake " + n;
+const STRAIT_OF = new Set(["Gibraltar", "Hormuz", "Malacca", "Magellan", "Dover", "Messina", "Otranto", "Bonifacio", "Juan de Fuca", "Belle Isle", "Tiran", "Singapore", "Georgia", "Sicily", "Mackinac"]);
+const straitLabel = n => /Channel|Sound|Passage|Belt|Firth|Bosporus|Dardanelles|Kattegat|Skagerrak|Øresund|Bab-el-Mandeb/.test(n) ? n : STRAIT_OF.has(n) ? "Strait of " + n : n + " Strait";
+const canalLabel = n => /Canal|Seaway/.test(n) ? n : n + " Canal";
+const RIVER = ["# River", "River #", "Rio #", "Río #"], LAKE = ["Lake #", "# Lake"], SEA = ["# Sea", "Sea of #", "The # Sea"],
+  STRAIT = ["Strait of #", "# Strait", "Straits of #"], RANGE = ["# Mountains", "# Range", "# Mts"], DESERT = ["# Desert"], MOUNT = ["Mount #", "Mt #", "Mt. #"];
+
+POOLS.region.push(
+  P("Countries", "Name any country in the world", COUNTRIES.map(countryAns), "Any sovereign country. With 197 to pick from, an obscure one pays well."),
+  P("Countries", "Name a country in the Americas", COUNTRIES.filter(c => c.conts[0] === "NA" || c.conts[0] === "SA").map(countryAns)),
+  P("States", "Name a US state", STATES.map(famedAns)),
+  P("Capitals", "Name any national capital", CAPITAL_ANS.map(({key,label,aliases,w})=>({key,label,aliases,w}))),
+  P("Voyages", "Name a country whose land Columbus reached on his four voyages", countries(["Bahamas", "Cuba", "Haiti", "Dominican Republic", "Jamaica", "Trinidad and Tobago", "Venezuela", "Honduras", "Nicaragua", "Costa Rica", "Panama", "Dominica", "Antigua and Barbuda", "Saint Kitts and Nevis", "Spain", "Portugal"]), "Sovereign countries today, 1492–1504, whether he landed or only sighted the coast. Spain and Portugal count as ports of call."),
+);
+POOLS.geo = [
+  P("Rivers", "Name a river in Europe", ranked("Danube,Thames,Rhine,Seine,Volga,Loire,Rhône|Rhone,Elbe,Po,Tiber,Oder,Vistula,Dnieper,Don,Ebro,Tagus|Tejo;Tajo,Douro|Duero,Guadalquivir,Meuse|Maas,Scheldt|Schelde,Garonne,Moselle|Mosel,Main,Weser,Ural,Dniester,Neva,Daugava,Shannon,Severn,Trent,Tyne,Clyde,Arno,Adige,Sava,Drava,Tisza,Inn,Mur,Prut,Northern Dvina,Pechora,Kama,Glomma,Neman,Bug,Siret,Mersey,Liffey,Saône|Saone,Dordogne,Tamar,Avon,Ouse,Spree,Havel,Neckar,Isar,Dee,Tay,Spey,Lagan,Vltava|Moldau,Morava,Olt,Mureș|Mures,Ticino,Aare,Reuss,Lot,Tarn,Charente,Somme,Marne,Oise,Guadiana,Júcar|Jucar,Segura,Minho|Miño,Kemijoki,Torne,Dalälven,Narva", RIVER), "Rivers that flow mostly through Europe."),
+  P("Rivers", "Name a river in North America", ranked("Mississippi,Missouri,Colorado,Rio Grande|Rio Bravo,Hudson,Ohio,St. Lawrence|Saint Lawrence,Yukon,Columbia,Mackenzie,Snake,Arkansas,Potomac,Tennessee,Delaware,Red,Platte,Sacramento,Fraser,Nelson,Churchill,Susquehanna,Connecticut,Illinois,Brazos,Pecos,Gila,Saskatchewan,Peace,Athabasca,Ottawa,Niagara,Kansas,Yellowstone,Willamette,Savannah,Alabama,Chattahoochee,Cumberland,Wabash,San Joaquin,Mobile,James,Usumacinta,Grijalva,Lerma,Balsas,Charles,Merrimack,Kennebec,Penobscot,Allegheny,Monongahela,Trinity,Sabine,Atchafalaya,Apalachicola,St. Johns|Saint Johns,Suwannee,Klamath,Rogue,Salt,Cimarron,Canadian,Republican,Minnesota,Wisconsin,Des Moines,Big Horn|Bighorn,Green,Little Colorado,Kootenay,Skeena,Thelon,Back,Coppermine,Assiniboine,Red River of the North,Restigouche,Miramichi,Saguenay,Richelieu", RIVER), "Canada, the US, Mexico and Central America."),
+  P("Rivers", "Name a river in Asia", ranked("Yangtze|Chang Jiang;Yangzi,Ganges|Ganga,Mekong,Yellow|Huang He;Huang Ho;Yellow River,Indus,Tigris,Euphrates,Brahmaputra,Amur|Heilongjiang,Ob,Yenisei|Yenisey,Lena,Irrawaddy|Ayeyarwady,Jordan,Salween,Amu Darya|Oxus,Syr Darya,Pearl|Zhujiang,Red|Hong,Chao Phraya,Irtysh,Kolyma,Indigirka,Godavari,Krishna,Narmada,Yamuna,Kaveri|Cauvery,Mahanadi,Ishikari,Shinano,Han,Yalu,Tumen,Kura,Helmand,Kabul,Sutlej,Chenab,Jhelum,Ravi,Beas,Angara,Selenga,Orontes|Asi,Karun,Tarim,Songhua,Huai,Min,Liao,Mae Klong,Tonle Sap,Kizilirmak|Kızılırmak,Aras|Araxes,Hooghly,Teesta,Padma,Meghna,Sittaung,Chindwin,Agano,Tone,Kiso,Mogami,Nakdong,Taedong", RIVER), "Rivers that flow mostly through Asia."),
+  P("Rivers", "Name a river in Africa", ranked("Nile,Congo|Zaire,Niger,Zambezi|Zambesi,Orange,Limpopo,Senegal,Volta,Blue Nile,White Nile,Ubangi,Kasai,Okavango|Cubango,Gambia,Benue,Shebelle,Juba,Rufiji,Cuanza|Kwanza,Tana,Atbara,Lualaba,Kagera,Chari|Shari,Ruvuma,Sanaga,Ogooué|Ogooue,Draa,Medjerda,Vaal,Kunene|Cunene,Shire,Luangwa,Kafue,Save,Black Volta,White Volta,Sobat,Sankuru,Moulouya,Sebou,Great Fish,Tugela,Bandama,Comoé|Comoe,Cavally,Mono,Ouémé|Oueme", RIVER)),
+  P("Rivers", "Name a river in South America", ranked("Amazon|Amazonas,Paraná|Parana,Orinoco,Magdalena,São Francisco|Sao Francisco,Madeira,Uruguay,Paraguay,Negro|Rio Negro,Tocantins,Araguaia,Xingu,Tapajós|Tapajos,Purus,Juruá|Jurua,Japurá|Japura;Caquetá,Putumayo|Içá,Ucayali,Marañón|Maranon,Napo,Pilcomayo,Bermejo,Colorado,Chubut,Essequibo,Maroni|Marowijne,Beni,Mamoré|Mamore,Iguazu|Iguaçu;Iguassu,Salado,Cauca,Atrato,Apure,Meta,Guaviare,Tietê|Tiete,Paranaíba|Paranaiba,Río de la Plata|Rio de la Plata;River Plate,Caroní|Caroni,Courantyne|Corantijn,Oyapock,Branco,Trombetas,Jari,Parnaíba|Parnaiba,Jequitinhonha,Biobío|Biobio,Loa,Santa Cruz,Negro (Argentina)", RIVER)),
+  P("Mountains", "Name a mountain range", ranked("Himalayas|Himalaya,Andes,Alps,Rockies|Rocky Mountains,Appalachians|Appalachian Mountains,Urals,Pyrenees,Atlas,Carpathians,Caucasus,Apennines,Karakoram,Hindu Kush,Tian Shan,Altai,Pamirs|Pamir,Sierra Nevada,Cascades|Cascade Range,Great Dividing Range,Drakensberg,Zagros,Dinaric Alps,Balkan Mountains|Stara Planina,Scandinavian Mountains|Scandes,Brooks Range,Alaska Range,Sierra Madre,Sierra Madre Occidental,Sierra Madre Oriental,Ozarks,Adirondacks,Kunlun,Ethiopian Highlands,Rwenzori,Western Ghats,Eastern Ghats,Southern Alps,Transantarctic Mountains,Taurus,Alborz|Elburz,Vosges,Jura,Black Forest,Tatras|Tatra Mountains,Coast Mountains,Wasatch,Blue Ridge,Great Smoky Mountains|Smokies;Smoky Mountains,White Mountains,Green Mountains,Catskills,Berkshires,Teton Range|Tetons,Bitterroot,Sawtooth,Olympic Mountains,Sierra Nevada de Santa Marta,Cordillera Blanca,Andes Patagonia,Qinling,Hengduan,Tibetan Plateau,Japanese Alps,Annamite Range|Annamites,Arakan Mountains,Sulaiman Mountains,Kopet Dag,Pontic Mountains,Rila,Pindus,Dolomites,Cantabrian Mountains,Sierra Morena,Massif Central,Ardennes,Harz,Sudetes,Grampians,Cairngorms,Snowdonia,Pennines,Cévennes|Cevennes,MacDonnell Ranges,Flinders Ranges,Blue Mountains,Hajar Mountains,Aïr Mountains|Air Mountains,Tibesti,Ahaggar|Hoggar", RANGE)),
+  P("Mountains", "Name one of the world's 14 peaks over 8,000 metres", ranked("Everest|Chomolungma;Sagarmatha,K2|Godwin-Austen,Kangchenjunga|Kanchenjunga,Annapurna,Lhotse,Makalu,Nanga Parbat,Cho Oyu,Dhaulagiri,Manaslu,Gasherbrum I|Hidden Peak,Broad Peak,Gasherbrum II,Shishapangma|Shisha Pangma", MOUNT)),
+  P("Mountains", "Name one of the Seven Summits", ranked("Everest,Kilimanjaro,Denali|McKinley,Aconcagua,Elbrus,Mont Blanc,Vinson|Vinson Massif,Kosciuszko|Kosciusko,Puncak Jaya|Carstensz Pyramid", MOUNT), "The highest peak on each continent. Mont Blanc and Kosciuszko count, as some lists use them."),
+  P("Mountains", "Name a volcano", ranked("Vesuvius,Etna,Fuji,Kilauea,St. Helens|Saint Helens;Mount St Helens,Krakatoa|Krakatau,Mauna Loa,Pinatubo,Kilimanjaro,Eyjafjallajökull|Eyjafjallajokull,Mauna Kea,Popocatépetl|Popocatepetl,Stromboli,Tambora,Rainier,Hekla,Cotopaxi,Chimborazo,Hood,Shasta,Pelée|Pelee,Erebus,Nyiragongo,Merapi,Sakurajima,Teide,Ararat,Damavand,Villarrica,Arenal,Mayon,Taal,Paricutín|Paricutin,Lassen|Lassen Peak,Baker,Redoubt,Pavlof,Katmai,Novarupta,Ruapehu,Taranaki|Egmont,Tongariro,Ngauruhoe,White Island|Whakaari,Soufrière Hills|Soufriere Hills,La Soufrière|La Soufriere,Fogo,Cameroon,Nyamuragira,Ol Doinyo Lengai,Erta Ale,Santorini,Vulcano,Hekla,Grímsvötn|Grimsvotn,Katla,Askja,Fagradalsfjall,Laki,Surtsey,Aso,Asama,Unzen,Ontake,Kliuchevskoi|Klyuchevskaya Sopka,Bezymianny,Galeras,Nevado del Ruiz,Tungurahua,Sangay,Lascar|Láscar,Ojos del Salado,Llullaillaco,Osorno,Calbuco,Chaitén|Chaiten,Fuego,Pacaya,Santa María|Santa Maria,Izalco,Masaya,Momotombo,Irazú|Irazu,Poás|Poas,Mount Agung|Agung,Bromo,Semeru,Rinjani,Kelud,Sinabung,Anak Krakatau,Yellowstone,Long Valley,Crater Lake|Mazama,Mount Mazama,Sunset Crater,Haleakalā|Haleakala,Hualālai|Hualalai,Piton de la Fournaise", MOUNT)),
+  P("Deserts", "Name a desert", ranked("Sahara,Gobi,Kalahari,Atacama,Mojave|Mohave,Arabian,Sonoran,Namib,Antarctic,Thar|Great Indian,Great Victoria,Taklamakan|Taklimakan,Chihuahuan,Great Basin,Patagonian,Syrian,Arctic,Karakum|Kara Kum,Kyzylkum|Kyzyl Kum,Simpson,Great Sandy,Gibson,Tanami,Libyan|Western,Nubian,Danakil,Dasht-e Kavir|Great Salt Desert,Dasht-e Lut|Lut,Negev,Sinai,Rub' al Khali|Empty Quarter;Rub al Khali,Black Rock,Painted,Colorado,Owyhee,Red,Ordos,Badain Jaran,Tengger,Kubuqi,Sechura,Monte,La Guajira,Tabernas,Bardenas Reales,Accona,Strzelecki,Sturt Stony,Little Sandy,Great Karoo|Karoo,Ogaden,Chalbi,Ténéré|Tenere,Nefud|An Nafud,Dahna,Cholistan,Registan,Judaean|Judean,Wahiba|Sharqiya Sands", DESERT)),
+  P("Lakes", "Name a lake in Africa", ranked("Victoria,Tanganyika,Malawi|Nyasa;Nyassa,Chad,Turkana|Rudolf,Albert,Kivu,Nasser,Volta,Kariba,Edward,Tana,Mweru,Bangweulu,Kyoga,Natron,Rukwa,Manyara,Naivasha,Nakuru,Assal,Abaya,Retba|Lac Rose,Bosomtwe,Chilwa,Cahora Bassa,Magadi,Bogoria,Baringo,Elmenteita,Ziway,Langano,Shala,Awasa|Hawassa,Mai-Ndombe,Tumba,Upemba,Kainji,Lagdo,Ihema,Burera,Bunyonyi,Ichkeul,Fitri,Faguibine,Kossou,Ngami,Sibaya,St Lucia", LAKE, lakeLabel)),
+  P("Lakes", "Name a lake in North America", ranked("Superior,Michigan,Huron,Erie,Ontario,Great Salt Lake|Great Salt,Tahoe,Great Bear,Great Slave,Winnipeg,Okeechobee,Champlain,Crater Lake|Crater,Mead,Powell,Lake of the Woods,Nicaragua,Chapala,Athabasca,Reindeer,Winnipegosis,Manitoba,Nipigon,Pontchartrain,Flathead,Yellowstone,George,Seneca,Cayuga,Placid,Utah,Red,Itasca,Mille Lacs,Leech,Vermilion,Bear,Coeur d'Alene,Pend Oreille,Shasta,Clear,Mono Lake|Mono,Salton Sea|Salton,Havasu,Texoma,Lanier,Norman,Murray,Moosehead,Sebago,Winnipesaukee,Memphremagog,Simcoe,Muskoka,Nipissing,Lake Louise|Louise,Okanagan,Kootenay,Atlin,Kluane,Dubawnt,Nettilling,Amadjuak,Mistassini,Saint-Jean|Lac Saint-Jean,Manicouagan,Melville,Smallwood,Managua,Atitlán|Atitlan,Petén Itzá|Peten Itza,Izabal,Cuitzeo,Pátzcuaro|Patzcuaro,Texcoco,Gatun,Yojoa,Ilopango,Coatepeque,Arenal,Enriquillo,Azuéi|Azuei,Toho,Kissimmee", LAKE, lakeLabel)),
+  P("Seas", "Name a sea", ranked("Mediterranean,Caribbean,Red,Black,Dead,Caspian,Baltic,North,Arabian,South China,Aegean,Adriatic,Bering,Coral,Sargasso,Yellow,East China,Sea of Japan|Japan;East Sea,Philippine,Tasman,Barents,Kara,Laptev,Beaufort,Weddell,Ross,Ionian,Tyrrhenian,Ligurian,Irish,Norwegian,Greenland,Labrador,Celtic,Java,Banda,Arafura,Timor,Sulu,Celebes|Sulawesi,Andaman,Sea of Okhotsk|Okhotsk,Sea of Marmara|Marmara,Sea of Azov|Azov,Aral,Bismarck,Solomon,Scotia,Amundsen,Chukchi,East Siberian,White,Wadden,Alboran,Balearic,Levantine,Sea of Galilee|Galilee;Kinneret,Salton,Inland,Seto Inland Sea|Seto Inland,Molucca,Halmahera,Flores,Bali,Savu,Ceram|Seram,Hebrides,Bellingshausen,Davis,Lincoln,Wandel,Pechora,Cretan,Thracian,Libyan,Sibuyan,Visayan,Camotes,Mindanao,Bohol,Natuna,Gulf of Mexico|Gulf of America,Gulf of Bothnia,Bay of Bengal", SEA, seaLabel), "Named seas, plus a few great gulfs and bays. The Sargasso Sea is the only one with no coastline."),
+  P("Seas", "Name a strait", ranked("Gibraltar,Bering,Hormuz,Malacca,Bosporus|Bosphorus,Dardanelles,Magellan,Dover,Messina,Bass,Cook,Torres,Taiwan|Formosa,Korea|Tsushima,Florida,Hudson,Bab-el-Mandeb|Bab al-Mandab,Mackinac,Juan de Fuca,Davis,Denmark,Kerch,Sunda,Lombok,Makassar,Palk,Otranto,Bonifacio,Menai,Georgia,Belle Isle,Tiran,Singapore,La Pérouse|La Perouse;Soya,Tsugaru,Kanmon,Luzon,Mindoro,San Bernardino,Surigao,Karimata,Bali,Ombai,Wetar,Hainan|Qiongzhou,Bonifacio,Kattegat,Skagerrak,Øresund|Oresund;Sound,Great Belt,Little Belt,Fehmarn Belt,Pentland Firth,North Channel,St. George's Channel|Saint George's Channel,Cabot,Northumberland,Canso,Hecate,Johnstone,Haro,Shelikof,Nares,Fury and Hecla,Lancaster Sound,Barrow,McClure,Vilkitsky,Dmitry Laptev,Sannikov,Long,Tatar,Nemuro,Kunashir,Le Maire,Drake Passage|Drake,Beagle Channel,Mozambique Channel", STRAIT, straitLabel), "Straits, channels, sounds and passages all count."),
+  P("Islands", "Name an island in the Mediterranean", ranked("Sicily|Sicilia,Sardinia|Sardegna,Cyprus,Corsica|Corse,Crete,Malta,Mallorca|Majorca,Ibiza,Menorca|Minorca,Rhodes,Santorini|Thira,Mykonos,Capri,Corfu|Kerkyra,Elba,Gozo,Formentera,Lesbos|Lesvos,Kefalonia|Cephalonia,Ischia,Naxos,Paros,Kos,Chios,Samos,Euboea|Evia,Zakynthos|Zante,Lampedusa,Djerba,Hvar,Brač|Brac,Korčula|Korcula,Krk,Stromboli,Lipari,Pantelleria,Ithaca,Delos,Hydra,Aegina,Patmos,Lemnos,Thassos,Milos,Karpathos,Lefkada,Skiathos,Skopelos,Spetses,Ios,Sifnos,Syros,Tinos,Andros,Amorgos,Kythira,Salamis,Ikaria,Vis,Mljet,Cres,Rab,Pag,Losinj,Comino,Giglio,Ponza,Procida,Vulcano,Favignana,Asinara,La Maddalena,Cabrera,Porquerolles,Port-Cros,Gökçeada|Imbros,Bozcaada|Tenedos,Arwad,Kerkennah,Galite", []), "Islands in the Mediterranean and its seas, such as the Aegean and Adriatic."),
+  P("Islands", "Name an island in the Caribbean", ranked("Cuba,Jamaica,Puerto Rico,Hispaniola,Aruba,Barbados,Trinidad,Bahamas islands|New Providence,Curaçao|Curacao,Grand Cayman,Tobago,Martinique,Guadeloupe,Saint Lucia,Antigua,Bonaire,Dominica,Grenada,Saint Martin|Sint Maarten;St Maarten,Saint Barthélemy|St Barts;Saint Barts;St. Barths,Saint Thomas,Saint John,Saint Croix,Tortola,Virgin Gorda,Anguilla,Montserrat,Saint Kitts,Nevis,Saint Vincent,Barbuda,Cozumel,Isla Mujeres,Roatán|Roatan,Margarita|Isla Margarita,San Andrés|San Andres,Providencia,Vieques,Culebra,Isla de la Juventud|Isle of Youth,Gonâve|Gonave,Tortuga,Saba,Sint Eustatius|Statia,Cayman Brac,Little Cayman,Bequia,Mustique,Canouan,Carriacou,Marie-Galante,La Désirade|La Desirade,Les Saintes,Jost Van Dyke,Anegada,Water Island,Mona,Desecheo,Utila,Guanaja,Corn Islands,Bocas del Toro|Isla Colón,Isla Saona|Saona,Beata,Navassa,Swan Islands,Isla Holbox|Holbox,Caye Caulker,Ambergris Caye", []), "Bahamas islands don't count: they sit in the Atlantic, as Columbus's landfall did."),
+  P("Waters", "Name a famous canal", ranked("Suez,Panama,Erie,Grand Canal|Grand,Kiel,Corinth,Manchester Ship,Welland,Rideau,Caledonian,Canal du Midi|Midi,Göta|Gota,Volga–Don|Volga-Don,White Sea–Baltic|White Sea-Baltic,Chesapeake and Delaware,Cape Cod,Illinois and Michigan,Chicago Sanitary and Ship,Love,Dismal Swamp,Trent–Severn|Trent-Severn,Lachine,Saint Lawrence Seaway|St. Lawrence Seaway,Grand Union,Llangollen,Forth and Clyde,Union,Canal Grande,Main–Danube|Main-Danube;Rhine-Main-Danube,Mittelland,Amsterdam–Rhine|Amsterdam-Rhine,North Sea Canal,Albert,Karakum,Telemark,Moscow,Mahmoudiyah", ["# Canal"], canalLabel)),
+];
+POOLS.cities = [
+  ["Italy", "Rome|Roma,Milan|Milano,Venice|Venezia,Florence|Firenze,Naples|Napoli,Turin|Torino,Pisa,Bologna,Verona,Genoa|Genova,Palermo,Siena,Bari,Catania,Padua|Padova,Trieste,Parma,Messina,Brescia,Taranto,Prato,Modena,Reggio Calabria,Reggio Emilia,Perugia,Livorno,Ravenna,Cagliari,Foggia,Rimini,Salerno,Ferrara,Sassari,Latina,Monza,Syracuse|Siracusa,Pescara,Bergamo,Trento,Vicenza,Terni,Bolzano,Novara,Piacenza,Ancona,Andria,Arezzo,Udine,Cesena,Lecce,Lucca,Como,Amalfi,Sorrento,Assisi,Pompeii|Pompei,Matera,Cremona,Mantua|Mantova,Aosta,Potenza,Campobasso,L'Aquila,Catanzaro,Cosenza,Brindisi,Ostia,San Gimignano,Portofino,Positano,Capri,Taormina,Agrigento,Trapani,Marsala,Ragusa,Urbino,Orvieto,Ravello,Alghero,Olbia,Varese,Lecco,Asti,Alessandria,Cuneo,La Spezia,Savona,Sanremo,Viareggio,Grosseto,Pistoia,Treviso,Rovigo,Belluno,Gorizia,Pordenone"],
+  ["Spain", "Madrid,Barcelona,Seville|Sevilla,Valencia,Granada,Málaga|Malaga,Bilbao,Zaragoza|Saragossa,Toledo,Córdoba|Cordoba,Salamanca,Palma|Palma de Mallorca,Murcia,Las Palmas|Las Palmas de Gran Canaria,Alicante,Valladolid,Vigo,Gijón|Gijon,San Sebastián|San Sebastian;Donostia,Pamplona,Santander,Cádiz|Cadiz,A Coruña|La Coruña;A Coruna;La Coruna,Vitoria-Gasteiz|Vitoria,Elche,Oviedo,Santa Cruz de Tenerife,Badalona,Cartagena,Terrassa,Jerez de la Frontera|Jerez,Sabadell,Almería|Almeria,Burgos,Albacete,Logroño|Logrono,Badajoz,Huelva,León|Leon,Tarragona,Lleida|Lérida;Lerida,Girona|Gerona,Segovia,Ávila|Avila,Cuenca,Marbella,Benidorm,Ibiza,Santiago de Compostela|Santiago,Cáceres|Caceres,Mérida|Merida,Ceuta,Melilla,Palos de la Frontera|Palos,Huesca,Teruel,Jaén|Jaen,Lugo,Ourense|Orense,Pontevedra,Castellón de la Plana|Castellón;Castellon,Zamora,Soria,Guadalajara,Ciudad Real,Palencia,Ponferrada,Ronda,Sitges,Figueres,Tarifa,Algeciras,Torremolinos,Nerja,Arrecife,Puerto del Rosario,San Cristóbal de La Laguna|La Laguna,Mahón|Mahon;Maó,Ciutadella,Reus,Getafe,Alcalá de Henares|Alcala de Henares,Móstoles|Mostoles,Leganés|Leganes,Fuenlabrada,Hospitalet|L'Hospitalet de Llobregat,Mataró|Mataro"],
+  ["France", "Paris,Marseille|Marseilles,Lyon|Lyons,Nice,Bordeaux,Toulouse,Strasbourg,Lille,Nantes,Cannes,Montpellier,Rennes,Reims|Rheims,Toulon,Saint-Étienne|Saint-Etienne,Le Havre,Grenoble,Dijon,Angers,Nîmes|Nimes,Villeurbanne,Clermont-Ferrand,Le Mans,Aix-en-Provence,Brest,Tours,Amiens,Limoges,Annecy,Perpignan,Metz,Besançon|Besancon,Orléans|Orleans,Rouen,Mulhouse,Caen,Nancy,Avignon,Calais,Dunkirk|Dunkerque,Versailles,Poitiers,La Rochelle,Pau,Bayonne,Biarritz,Lourdes,Chamonix,Saint-Malo,Cherbourg,Ajaccio,Bastia,Carcassonne,Arles,Antibes,Saint-Tropez,Chartres,Troyes,Colmar,Valence,Béziers|Beziers,Montauban,Quimper,Lorient,Vannes,Saint-Nazaire,Boulogne-sur-Mer|Boulogne,Épernay|Epernay,Vichy,Cognac,Nanterre,Saint-Denis,Argenteuil,Montreuil,Boulogne-Billancourt,Menton,Grasse,Fréjus|Frejus,Sète|Sete,Narbonne,Albi,Rodez,Cahors,Périgueux|Perigueux,Angoulême|Angouleme,Niort,Laval,Le Puy-en-Velay,Aurillac,Bourges,Nevers,Auxerre,Mâcon|Macon,Chambéry|Chambery,Évian-les-Bains|Evian,Deauville,Honfleur,Bayeux,Mont-Saint-Michel,Giverny,Fontainebleau,Amboise,Blois,Saumur"],
+  ["Germany", "Berlin,Munich|München;Muenchen,Hamburg,Frankfurt|Frankfurt am Main,Cologne|Köln;Koln,Stuttgart,Düsseldorf|Dusseldorf,Dresden,Leipzig,Dortmund,Essen,Bremen,Hanover|Hannover,Nuremberg|Nürnberg;Nurnberg,Duisburg,Bochum,Wuppertal,Bielefeld,Bonn,Münster|Munster,Mannheim,Karlsruhe,Augsburg,Wiesbaden,Mönchengladbach|Monchengladbach,Gelsenkirchen,Aachen,Braunschweig|Brunswick,Kiel,Chemnitz,Halle,Magdeburg,Freiburg,Krefeld,Mainz,Lübeck|Lubeck,Erfurt,Oberhausen,Rostock,Kassel,Hagen,Potsdam,Saarbrücken|Saarbrucken,Hamm,Ludwigshafen,Oldenburg,Osnabrück|Osnabruck,Leverkusen,Heidelberg,Darmstadt,Regensburg,Würzburg|Wurzburg,Ingolstadt,Ulm,Wolfsburg,Göttingen|Gottingen,Pforzheim,Koblenz,Trier,Jena,Bamberg,Passau,Konstanz|Constance,Weimar,Bayreuth,Baden-Baden,Garmisch-Partenkirchen,Flensburg,Schwerin,Cottbus,Rothenburg ob der Tauber|Rothenburg,Füssen|Fussen,Berchtesgaden,Lindau,Tübingen|Tubingen,Marburg,Gießen|Giessen,Fulda,Paderborn,Siegen,Solingen,Remscheid,Herne,Bottrop,Recklinghausen,Mülheim|Mulheim,Neuss,Wilhelmshaven,Emden,Cuxhaven,Stralsund,Greifswald,Wismar,Zwickau,Görlitz|Gorlitz,Meissen|Meißen,Bautzen,Eisenach,Gotha,Dessau,Wittenberg,Quedlinburg"],
+  ["the United Kingdom", "London,Manchester,Birmingham,Liverpool,Edinburgh,Glasgow,Leeds,Bristol,Cardiff,Belfast,Oxford,Cambridge,Sheffield,Newcastle|Newcastle upon Tyne,York,Leicester,Coventry,Bradford,Nottingham,Sunderland,Brighton,Hull|Kingston upon Hull,Plymouth,Stoke-on-Trent|Stoke,Wolverhampton,Derby,Swansea,Southampton,Aberdeen,Portsmouth,Dundee,Inverness,Bath,Exeter,Norwich,Canterbury,Chester,Durham,Lancaster,Carlisle,Reading,Milton Keynes,Northampton,Luton,Bournemouth,Swindon,Ipswich,Gloucester,Worcester,Hereford,Lincoln,Salisbury,Winchester,Stirling,Perth,Derry|Londonderry,Armagh,Newport,Wrexham,Bangor,St Andrews|Saint Andrews,Blackpool,Middlesbrough,Preston,Bolton,Stockport,Dover,Peterborough,Colchester,Cheltenham,Truro,Wells,Ely,Chelmsford,Southend-on-Sea|Southend,Basildon,Slough,Watford,St Albans|Saint Albans,Guildford,Crawley,Maidstone,Hastings,Eastbourne,Torquay,Falmouth,Penzance,Barnstaple,Taunton,Yeovil,Weymouth,Poole,Shrewsbury,Telford,Stafford,Lichfield,Warwick,Stratford-upon-Avon|Stratford,Harrogate,Scarborough,Whitby,Blackburn,Burnley,Wigan,Warrington,Huddersfield,Halifax,Wakefield,Doncaster,Rotherham,Barnsley,Grimsby,Paisley,Kilmarnock,Ayr,Dumfries,Fort William,Oban,Lerwick,Kirkwall,Stornoway,Lisburn,Newry,Enniskillen,Coleraine,Aberystwyth,Carmarthen,Llandudno,Merthyr Tydfil,St Davids"],
+  ["Japan", "Tokyo,Osaka,Kyoto,Hiroshima,Yokohama,Nagoya,Sapporo,Kobe,Fukuoka,Nagasaki,Nara,Sendai,Kawasaki,Saitama,Chiba,Kitakyushu,Sakai,Niigata,Hamamatsu,Kumamoto,Sagamihara,Shizuoka,Okayama,Kagoshima,Hachioji,Himeji,Utsunomiya,Matsuyama,Kanazawa,Nagano,Naha,Hakodate,Asahikawa,Kochi,Takamatsu,Tokushima,Oita,Miyazaki,Aomori,Akita,Morioka,Yamagata,Fukushima,Mito,Maebashi,Kofu,Gifu,Tsu,Otsu,Wakayama,Tottori,Matsue,Yamaguchi,Saga,Fukui,Toyama,Kamakura,Nikko,Hakone,Yokosuka,Ise,Kurashiki,Kawagoe,Toyota,Nagaoka,Takayama,Beppu,Atami,Karuizawa,Otaru,Kushiro,Obihiro,Hirosaki,Matsumoto,Kurume,Sasebo,Shimonoseki,Kure,Fukuyama,Onomichi,Uji,Hiraizumi,Narita,Funabashi,Kashiwa,Machida,Fujisawa,Odawara,Numazu,Fuji,Iwaki,Koriyama,Tsukuba,Hitachi,Takasaki,Kiryu,Suwa,Ueda,Tsuruoka,Sakata"],
+  ["India", "Mumbai|Bombay,Delhi|New Delhi,Kolkata|Calcutta,Chennai|Madras,Bengaluru|Bangalore,Agra,Hyderabad,Jaipur,Goa|Panaji;Panjim,Varanasi|Benares;Banaras,Pune|Poona,Ahmedabad,Surat,Lucknow,Kanpur,Nagpur,Indore,Bhopal,Visakhapatnam|Vizag,Patna,Vadodara|Baroda,Ludhiana,Nashik,Srinagar,Amritsar,Chandigarh,Kochi|Cochin,Thiruvananthapuram|Trivandrum,Coimbatore,Madurai,Mysuru|Mysore,Guwahati,Bhubaneswar,Ranchi,Raipur,Dehradun,Shimla,Jodhpur,Udaipur,Jaisalmer,Puducherry|Pondicherry,Darjeeling,Rishikesh,Haridwar,Prayagraj|Allahabad,Gwalior,Jabalpur,Meerut,Aurangabad|Chhatrapati Sambhajinagar,Rajkot,Vijayawada,Mangaluru|Mangalore,Tiruchirappalli|Trichy,Kozhikode|Calicut,Shillong,Imphal,Gangtok,Leh,Jammu,Ajmer,Pushkar,Bikaner,Kota,Noida,Gurugram|Gurgaon,Faridabad,Ghaziabad,Thane,Howrah,Siliguri,Dhanbad,Jamshedpur,Cuttack,Puri,Hampi,Khajuraho,Bodh Gaya,Ooty|Udhagamandalam,Munnar,Alleppey|Alappuzha,Kanyakumari,Rameswaram,Tirupati,Warangal,Nellore,Guntur,Belagavi|Belgaum,Hubli|Hubballi,Solapur,Kolhapur,Nanded,Bareilly,Aligarh,Moradabad,Gorakhpur,Jhansi,Mathura,Ayodhya,Itanagar,Aizawl,Kohima,Agartala,Dispur,Port Blair|Sri Vijaya Puram,Manali,Dharamshala,Mussoorie,Nainital"],
+  ["Canada", "Toronto,Montreal|Montréal,Vancouver,Ottawa,Calgary,Quebec City|Québec;Quebec,Edmonton,Winnipeg,Halifax,Victoria,Hamilton,Kitchener,London,Oshawa,Windsor,Saskatoon,Regina,St. Catharines|Saint Catharines,Kelowna,Barrie,Sherbrooke,Guelph,Kingston,Moncton,Saint John,St. John's|Saint John's,Fredericton,Charlottetown,Thunder Bay,Sudbury|Greater Sudbury,Whitehorse,Yellowknife,Iqaluit,Mississauga,Brampton,Surrey,Laval,Gatineau,Markham,Burnaby,Richmond,Abbotsford,Nanaimo,Kamloops,Prince George,Lethbridge,Red Deer,Banff,Jasper,Niagara Falls,Trois-Rivières|Trois-Rivieres,Saguenay,Lévis|Levis,Churchill,Whistler,Moose Jaw,Brandon,Sault Ste. Marie|Sault Sainte Marie,North Bay,Peterborough,Belleville,Cornwall,Corner Brook,Sydney,Dawson City|Dawson,Inuvik,Medicine Hat,Fort McMurray,Grande Prairie,Waterloo,Cambridge,Brantford,Sarnia,Timmins,Kenora,Prince Rupert,Penticton,Vernon,Tofino,Squamish,Nelson,Cranbrook,Canmore,Drumheller,Prince Albert,Swift Current,Thompson,The Pas,Rimouski,Gaspé|Gaspe,Tadoussac,Rouyn-Noranda,Val-d'Or,Chicoutimi,Lunenburg,Truro,Yarmouth,Antigonish,Summerside,Gander,Labrador City,Happy Valley-Goose Bay,Rankin Inlet,Hay River,Tuktoyaktuk"],
+  ["Australia", "Sydney,Melbourne,Brisbane,Perth,Adelaide,Canberra,Gold Coast,Darwin,Hobart,Cairns,Newcastle,Wollongong,Geelong,Townsville,Toowoomba,Ballarat,Bendigo,Launceston,Mackay,Rockhampton,Bunbury,Bundaberg,Wagga Wagga,Hervey Bay,Mildura,Shepparton,Gladstone,Port Macquarie,Tamworth,Orange,Dubbo,Geraldton,Kalgoorlie,Albany,Broome,Alice Springs,Mount Isa,Coffs Harbour,Lismore,Bathurst,Albury,Armidale,Broken Hill,Devonport,Burnie,Whyalla,Mount Gambier,Port Augusta,Katherine,Sunshine Coast,Fremantle,Byron Bay,Noosa,Ipswich,Logan,Coober Pedy,Port Hedland,Karratha,Esperance,Exmouth,Carnarvon,Kununurra,Tennant Creek,Longreach,Charleville,Emerald,Bowen,Airlie Beach,Port Douglas,Cooktown,Weipa,Thursday Island,Goulburn,Queanbeyan,Wodonga,Warrnambool,Echuca,Swan Hill,Horsham,Sale,Traralgo,Murray Bridge,Port Lincoln,Victor Harbor,Kalbarri,Margaret River,Busselton,Mandurah,Rottnest Island,Strahan,Queenstown,Port Arthur"],
+  ["Brazil", "Rio de Janeiro|Rio,São Paulo|Sao Paulo,Brasília|Brasilia,Salvador,Manaus,Fortaleza,Recife,Belo Horizonte,Curitiba,Porto Alegre,Florianópolis|Florianopolis,Belém|Belem,Goiânia|Goiania,Guarulhos,Campinas,São Luís|Sao Luis,Maceió|Maceio,Natal,Teresina,João Pessoa|Joao Pessoa,Campo Grande,Cuiabá|Cuiaba,Aracaju,Vitória|Vitoria,Porto Velho,Macapá|Macapa,Boa Vista,Rio Branco,Palmas,Santos,Niterói|Niteroi,Londrina,Joinville,Ribeirão Preto|Ribeirao Preto,Uberlândia|Uberlandia,Sorocaba,Juiz de Fora,Feira de Santana,Foz do Iguaçu|Foz do Iguacu,Petrópolis|Petropolis,Ouro Preto,Paraty|Parati,Búzios|Buzios,Olinda,Porto Seguro,Santarém|Santarem,Caxias do Sul,Pelotas,Maringá|Maringa,Blumenau,Santo André|Santo Andre,São Bernardo do Campo|Sao Bernardo do Campo,Osasco,Contagem,Duque de Caxias,Nova Iguaçu|Nova Iguacu,São José dos Campos|Sao Jose dos Campos,Campos dos Goytacazes,Montes Claros,Anápolis|Anapolis,Caruaru,Petrolina,Juazeiro,Ilhéus|Ilheus,Itabuna,Vitória da Conquista|Vitoria da Conquista,Imperatriz,Marabá|Maraba,Parintins,Tefé|Tefe,Bonito,Corumbá|Corumba,Gramado,Angra dos Reis,Cabo Frio,Jericoacoara,Lençóis|Lencois,Fernando de Noronha,Mariana,Tiradentes,Diamantina"],
+  ["Mexico", "Mexico City|Ciudad de México;CDMX,Cancún|Cancun,Guadalajara,Monterrey,Acapulco,Tijuana,Puebla,Oaxaca,Mérida|Merida,Puerto Vallarta,León|Leon,Ciudad Juárez|Juárez;Juarez,Zapopan,Querétaro|Queretaro,San Luis Potosí|San Luis Potosi,Aguascalientes,Hermosillo,Chihuahua,Mexicali,Culiacán|Culiacan,Morelia,Toluca,Saltillo,Veracruz,Tampico,Durango,Cuernavaca,Mazatlán|Mazatlan,Torreón|Torreon,Villahermosa,Tuxtla Gutiérrez|Tuxtla Gutierrez,Xalapa|Jalapa,Reynosa,Matamoros,Nuevo Laredo,Ensenada,La Paz,Cabo San Lucas|Los Cabos,Campeche,Chetumal,Playa del Carmen,Tulum,Taxco,Guanajuato,San Miguel de Allende,Zacatecas,Colima,Tepic,Pachuca,Tlaxcala,Cozumel,Ixtapa,Zihuatanejo,Manzanillo,Los Mochis,Ciudad Obregón|Ciudad Obregon,Nogales,Tapachula,San Cristóbal de las Casas|San Cristobal de las Casas,Valladolid,Palenque,Uruapan,Celaya,Irapuato,Ecatepec,Nezahualcóyotl|Nezahualcoyotl,Naucalpan,Tlalnepantla,Chimalhuacán,Tonalá|Tonala,Tlaquepaque,San Nicolás de los Garza,Guadalupe,Apodaca,Santa Catarina,Cholula,Teotihuacán|Teotihuacan,Puerto Escondido,Huatulco,Bacalar,Isla Mujeres,Holbox,Loreto,Todos Santos,Guaymas,San Felipe,Rosarito,Creel,Parral|Hidalgo del Parral,Monclova,Piedras Negras,Ciudad Victoria,Coatzacoalcos,Córdoba|Cordoba,Orizaba,Papantla,Tehuacán|Tehuacan,Cuautla,Iguala,Chilpancingo"],
+  ["China", "Beijing|Peking,Shanghai,Hong Kong,Guangzhou|Canton,Shenzhen,Chongqing,Tianjin,Chengdu,Wuhan,Nanjing|Nanking,Xi'an|Xian,Hangzhou,Shenyang,Harbin,Dongguan,Foshan,Suzhou,Qingdao|Tsingtao,Dalian,Zhengzhou,Jinan,Changsha,Kunming,Hefei,Fuzhou,Xiamen|Amoy,Nanning,Shijiazhuang,Taiyuan,Ürümqi|Urumqi,Lanzhou,Changchun,Nanchang,Guiyang,Hohhot,Ningbo,Wuxi,Lhasa,Xining,Yinchuan,Haikou,Sanya,Guilin,Luoyang,Kaifeng,Datong,Zhuhai,Shantou,Wenzhou,Tangshan,Baotou,Kashgar|Kashi,Lijiang,Dunhuang,Macau|Macao,Yangshuo,Pingyao,Dali,Shangri-La|Zhongdian,Chengde,Qufu,Tai'an|Taian,Huangshan,Zhangjiajie,Leshan,Emeishan,Yichang,Jingdezhen,Yangzhou,Zhenjiang,Changzhou,Nantong,Xuzhou,Linyi,Weifang,Yantai,Weihai,Qinhuangdao,Baoding,Handan,Anshan,Fushun,Jilin,Daqing,Qiqihar,Mudanjiang,Hulunbuir|Hailar,Ordos,Turpan,Hotan,Golmud,Shigatse,Xishuangbanna|Jinghong,Beihai,Liuzhou,Zunyi,Mianyang,Yibin,Zigong,Nanchong"],
+].map(([country, list]) => P("Cities", `Name a city or town in ${country}`, ranked(list), "Well-known cities and towns. Larger places are listed first, so a small town pays more."));
+
+// ---------- difficulty ----------
+// 1 calm seas (easy), 2 choppy (medium), 3 stormy (hard)
+const EASY = [/any country|any national capital|country in the Americas|^Name a US state$|Name a country in (Europe|Africa|Asia|South America|North America)$|capital city in Europe|G7|continent|five oceans|Great Lakes|starts with (M|N)$|NATO|European Union|uses the euro|more than 100 million|won the men's FIFA|hosted the Summer Olympics|countries of the United Kingdom|Nordic country|Spanish is|mountain range|Name a sea$|Name a volcano|landlocked country$|island country|country that starts with (A|B|C|G|I|M|P|S|T)$|four main islands|Canary Islands|Danube flows|Mediterranean coastline|in Italy|in France|in Spain|in the United Kingdom|in Japan|Name a desert|New England|Pacific coastline$|borders Mexico|Name a Nordic capital|Caribbean island country/];
+const HARD = [/Tropic of|Prime Meridian|OPEC|BRICS|dollar|only red and white|state of (India|Brazil|Mexico)|German state|starts with “S”, then|ends in -a, but|letter (Q|X|W|V|K|J)|capital that starts with|capital city on an island|landlocked country's capital|capital city in (Africa|Oceania)|Pacific island|West Africa|South Asia|strait|canal|over 8,000 metres|river in (Asia|Africa|South America)|lake in Africa|Columbus reached|borders (Kentucky|Colorado|Tennessee|Missouri)|Appalachian|Arctic Circle|Red Sea|Indian Ocean|Sahara extends|named after a person|exactly three words|city or town in (China|Brazil|Mexico|India)|Winter Olympics|hosted the men's FIFA|Arabian Peninsula/];
+const EASY_BORDERS = new Set(["Germany", "France", "China", "Russia", "Brazil", "Spain", "India", "Italy", "Switzerland", "Argentina", "Belgium", "Peru", "Poland", "Austria", "Pakistan"]);
+const HARD_BORDERS = new Set(["Tanzania", "the Democratic Republic of the Congo", "Zambia", "Niger", "Mali", "Cameroon", "Chad", "Uganda", "Angola", "Mozambique", "Laos", "Uzbekistan", "Kazakhstan", "Belarus", "Libya", "Sudan", "Serbia", "Croatia", "Romania", "Hungary", "Ukraine", "Ethiopia", "Kenya", "Myanmar", "Afghanistan", "Algeria", "Guatemala", "Bolivia", "Iraq", "Syria", "Iran"]);
+function difficultyOf(p){
+  const m = p.q.match(/land border with (.+)$/);
+  if (m) return EASY_BORDERS.has(m[1]) ? 1 : HARD_BORDERS.has(m[1]) ? 3 : 2;
+  if (HARD.some(r => r.test(p.q))) return 3;
+  if (EASY.some(r => r.test(p.q))) return 1;
+  return 2;
+}
+const SEAS = { 1: "Calm seas", 2: "Choppy waters", 3: "Stormy seas" };
+
+// every answer anywhere is a recognized place, so a real-but-wrong answer scores 0 instead of asking to retype
+const KNOWN = new Map();
+const addKnown = (n, label) => { const k = norm(n); if (k && !KNOWN.has(k)) KNOWN.set(k, label); };
+COUNTRIES.forEach(c => { [c.name, ...c.aliases].forEach(n => addKnown(n, c.name)); c.caps.forEach(n => addKnown(n, n)); });
+Object.values(POOLS).flat().forEach(p => p.answers.forEach(a => [a.label, ...a.aliases].forEach(n => addKnown(n, a.label))));
+["Greenland", "Hong Kong", "Western Sahara", "French Guiana", "Czechoslovakia", "Delhi", "Puerto Rico", "Bermuda"].forEach(n => addKnown(n, n));
+
+// ---------- daily set ----------
+function mulberry(seed){ let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffle(r, a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const ALL = Object.values(POOLS).flat().filter(p => p.answers.length >= 3);
+ALL.forEach((p, i) => { p.d = difficultyOf(p); p.id = i; });
+const TIERS = { 1: ALL.filter(p => p.d === 1), 2: ALL.filter(p => p.d === 2), 3: ALL.filter(p => p.d === 3) };
+const MIX = { 1: 3, 2: 4, 3: 3 };
+// Each tier is dealt like a shuffled deck: a day takes the next few cards, and the deck is reshuffled every time it runs out,
+// so a prompt never repeats until its whole tier has been played. The ten prompts are then shuffled into a fresh order.
+const DECKS = {};
+function deckOrder(tier, cycle){
+  const key = tier + ":" + cycle; if (DECKS[key]) return DECKS[key];
+  let order = shuffle(mulberry(7717 * tier + 104729 * cycle), TIERS[tier]);
+  if (cycle > 0) { // cards played at the end of the last deck go to the back of this one, so nothing returns within days
+    const prev = deckOrder(tier, cycle - 1), tail = new Set(prev.slice(-MIX[tier] * 7).map(p => p.id));
+    order = order.filter(p => !tail.has(p.id)).concat(order.filter(p => tail.has(p.id)));
+  }
+  return DECKS[key] = order;
+}
+function deal(tier, day){
+  const len = TIERS[tier].length, k = MIX[tier], out = [];
+  for (let j = 0; j < k; j++) { const n = day * k + j; out.push(deckOrder(tier, Math.floor(n / len))[n % len]); }
+  return out;
+}
+function buildSet(day){
+  const picks = [...deal(1, day), ...deal(2, day), ...deal(3, day)];
+  const seen = new Set(picks.map(p => p.id)); if (seen.size < picks.length) console.warn("duplicate prompt on day", day);
+  return shuffle(mulberry(day * 2654435761), picks);
+}
+const EPOCH = Date.UTC(2026, 0, 1);
+function dayNumber(d = new Date()){ return Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - EPOCH) / 864e5) + 1; }
+
+// ---------- matching ----------
+function lev(a, b){
+  const m = a.length, n = b.length; if (Math.abs(m - n) > 2) return 9;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return prev[n];
+}
+const tol = n => n.length >= 9 ? 2 : n.length >= 5 ? 1 : 0;
+function match(input, q){
+  const n = norm(input); if (!n) return null;
+  for (const a of q.answers) if ([a.label, ...a.aliases].some(x => norm(x) === n)) return { valid: true, ans: a };
+  if (KNOWN.has(n)) return { valid: false, label: KNOWN.get(n) };
+  let best = null, bd = 9;
+  for (const a of q.answers) for (const x of [a.label, ...a.aliases]) { const d = lev(n, norm(x)); if (d < bd) { bd = d; best = a; } }
+  if (best && bd <= tol(n)) return { valid: true, ans: best };
+  let bk = null; bd = 9;
+  for (const [k, label] of KNOWN) { const d = lev(n, k); if (d < bd) { bd = d; bk = label; } }
+  if (bk && bd <= tol(n)) return { valid: false, label: bk };
+  return null;
+}
+
+// ---------- rarity ----------
+// Blend real picks with a built-in guess at how often each answer is named, so early players still get sensible scores.
+const K = 5;
+function popularity(q, qi, excludeSelf){
+  const live = mode === "daily";
+  const c = (live ? (excludeSelf ? countsExcl : counts)[qi] : null) || {}; const N = (live ? (excludeSelf ? totalsExcl : totals)[qi] : 0) || 0;
+  const Wt = q.answers.reduce((s, a) => s + a.w, 0);
+  const p = {}; q.answers.forEach(a => p[a.key] = ((c[a.key] || 0) + K * a.w / Wt) / (N + K));
+  // when answers are about equally likely, the most popular one still earns a middling score rather than the floor
+  return { p, max: Math.max(...Object.values(p), 2 / q.answers.length), N, c };
+}
+function pointsFor(q, qi, key){ const { p, max } = popularity(q, qi, true); return Math.round(10 + 90 * (1 - p[key] / max)); }
+const band = s => s >= 80 ? "rare" : s >= 50 ? "good" : s > 0 ? "common" : "zero";
+
+// ---------- sea chart ----------
+const B = { l: -82, r: -2, b: 15, t: 41 }, KX = Math.cos(27 * Math.PI / 180), SC = 720 / ((B.r - B.l) * KX), CH = (B.t - B.b) * SC;
+const proj = ([lon, lat]) => [+((lon - B.l) * KX * SC).toFixed(1), +((B.t - lat) * SC).toFixed(1)];
+const poly = pts => pts.map(proj).map(p => p.join(",")).join(" ");
+const LANDS = [
+  [[-9.5,43.4],[-8.9,42],[-8.8,40.5],[-9.5,38.8],[-8.8,38.4],[-8.9,37],[-7.4,37.2],[-6.3,36.8],[-5.6,36],[-4.4,36.7],[-2,36.7],[-0.5,38],[0.2,38.8],[-0.3,39.5],[0.9,40.8],[3.2,41.9],[3.2,43],[-1.8,43.4],[-4,43.5],[-8,43.7]],
+  [[-5.9,35.8],[-6.8,34],[-8.5,33.3],[-9.6,30.4],[-9.8,29.2],[-11.3,28.1],[-13,27.6],[-14.5,26.1],[-15.9,23.7],[-16.5,22.3],[-17.1,20.9],[-16.4,19.4],[-16.1,18],[-16.5,16.2],[-17.2,14.7],[-16.8,13.2],[-15,11],[2,11],[2,35.4],[-1.2,35.3],[-2.9,35.3],[-4.4,35.2]],
+  [[-90,30.2],[-84,30],[-83,29],[-82.6,27.8],[-81.8,26],[-81,25.2],[-80.4,25.2],[-80,26.8],[-80.6,28.4],[-81.3,30],[-81.1,31.8],[-79.6,33],[-78.5,33.9],[-76.6,34.7],[-75.5,35.3],[-75.9,36.9],[-75.5,37.8],[-75.1,38.7],[-74,40.5],[-72,41.1],[-70,41.7],[-70.6,42.6],[-70,43.8],[-66.9,44.8],[-64,45.5],[-60,46],[-90,46]],
+  [[-85,21.9],[-84,22.6],[-82,23.1],[-80.3,23.1],[-78.4,22.4],[-77.2,21.6],[-75.7,21.1],[-74.2,20.3],[-75.1,19.9],[-77.7,19.85],[-77.3,20.6],[-78.4,21.4],[-79.7,21.7],[-81.4,22.1],[-83.1,22],[-84.5,21.8]],
+  [[-74.45,19.9],[-73.4,19.85],[-72.1,19.8],[-70.8,19.85],[-69.9,19.65],[-68.35,18.6],[-69.1,18.4],[-70.2,18.2],[-71.1,17.6],[-71.7,18],[-72.8,18.15],[-74.45,18.4],[-72.8,18.6],[-72.7,19.1]],
+  [[-67.25,18.5],[-65.6,18.4],[-65.6,18.05],[-67.2,17.95]],
+  [[-78.35,18.45],[-76.9,18.5],[-76.2,18.1],[-76.8,17.8],[-77.8,17.85],[-78.35,18.25]],
+];
+const ISLES = [[-74.5,24.05,2.3],[-75.1,23.25,1.8],[-77.9,24.4,2.6],[-77.2,26.4,2.4],[-78.3,26.6,2.2],[-76.4,25.2,1.6],[-73.95,22.6,1.6],[-73.4,21.1,1.6],[-71.8,21.8,1.4],
+  [-15.6,28,2],[-16.6,28.3,2.2],[-17.25,28.1,1.3],[-13.7,28.9,1.6],[-14,28.4,1.8],[-17.85,28.7,1.4],[-17.95,27.75,1.1],
+  [-16.95,32.75,1.6],[-25.5,37.8,1.6],[-28.1,38.5,1.3],[-27.2,38.7,1.2],[-31.2,39.4,1],[-64.75,32.3,1.2],[-61.5,16.2,1.6],[-61.35,15.4,1.3],[-61.8,17.1,1.2],[-62.75,17.3,1],[-63.05,18.05,1],[-64.6,18.4,1],[-23.6,15.2,1.4],[-24.4,16.6,1.2]];
+const ROUTE = [
+  [-6.95,37.2,0,"Palos de la Frontera","3 Aug 1492",-6,-8,"end"],[-9.6,35.4,35],[-13.6,30.4,85],
+  [-17.1,28.1,120,"La Gomera","6 Sep",0,20,"middle"],[-25,28.3,195],[-33,28.6,270],[-40,28.2,345],
+  [-47,27.6,420,"Sargasso Sea","16 Sep",0,20,"middle"],[-55,27.2,505],
+  [-63,25.8,590,"Birds sighted","7 Oct",0,-14,"middle"],[-70,24.6,660],
+  [-74.5,24.05,700,"Guanahaní: land!","12 Oct",8,4,"start"],[-75.3,23.0,740],[-75.6,21.75,790],
+  [-75.7,21.25,820,"Cuba","28 Oct",-8,-2,"end"],[-74.6,20.5,870],[-73.4,20.0,920],
+  [-72.1,19.85,1000,"La Navidad, Hispaniola","25 Dec",6,20,"start"],
+].map(([lon, lat, pts, name, date, dx, dy, anchor]) => { const [x, y] = proj([lon, lat]); return { x, y, pts, name, date, dx, dy, anchor }; });
+const MILES = ROUTE.filter(w => w.name);
+function posAt(v){
+  v = Math.max(0, Math.min(1000, v));
+  for (let i = 0; i < ROUTE.length - 1; i++) { const a = ROUTE[i], b = ROUTE[i + 1];
+    if (v <= b.pts) { const t = (v - a.pts) / (b.pts - a.pts); return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, i }; } }
+  const e = ROUTE[ROUTE.length - 1]; return { x: e.x, y: e.y, i: ROUTE.length - 2 };
+}
+function sailedPoints(v){ const p = posAt(v); return ROUTE.slice(0, p.i + 1).map(w => `${w.x},${w.y}`).concat(`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "); }
+const SHIP = `<g transform="scale(-1,1)"><path class="hull" d="M-12,0 L13,0 L9,6 L-9,6 Z"/><line class="mast" x1="-5" y1="0" x2="-5" y2="-15"/><line class="mast" x1="3" y1="0" x2="3" y2="-18"/><line class="mast" x1="10" y1="0" x2="10" y2="-11"/>
+  <path class="sail" d="M-9,-13 Q-5,-10 -1,-13 L-1,-3 Q-5,-1 -9,-3 Z"/><path class="sail" d="M-1,-16 Q3,-13 7,-16 L7,-4 Q3,-2 -1,-4 Z"/><path class="sail" d="M10,-11 L10,-1 L15,-1 Z"/><path class="pennant" d="M3,-18 L8,-16.5 L3,-15 Z"/></g>`;
+
+function drawChart(){
+  const grid = [], degs = [];
+  for (let lon = -80; lon <= -10; lon += 10) { const [x] = proj([lon, 0]); grid.push(`M${x},0 V${CH.toFixed(1)}`); degs.push(`<text class="deg" x="${x + 2}" y="${(CH - 3).toFixed(1)}">${-lon}°W</text>`); }
+  for (let lat = 20; lat <= 40; lat += 10) { const [, y] = proj([0, lat]); grid.push(`M0,${y} H720`); degs.push(`<text class="deg" x="717" y="${y - 2}" text-anchor="end">${lat}°N</text>`); }
+  const [rx, ry] = proj([-38, 35.5]); const rh = [];
+  for (let k = 0; k < 16; k++) { const a = k * Math.PI / 8; rh.push(`<line class="rhumb" x1="${rx}" y1="${ry}" x2="${(rx + Math.cos(a) * 900).toFixed(1)}" y2="${(ry + Math.sin(a) * 900).toFixed(1)}"/>`); }
+  const star = [0, 1, 2, 3].map(k => { const a = k * Math.PI / 2, b = a + Math.PI / 4, c = a - Math.PI / 4, L = 20, S = 5;
+    return `<path d="M${rx},${ry} L${(rx + Math.cos(c) * S).toFixed(1)},${(ry + Math.sin(c) * S).toFixed(1)} L${(rx + Math.cos(a) * L).toFixed(1)},${(ry + Math.sin(a) * L).toFixed(1)} Z"/><path class="dk" d="M${rx},${ry} L${(rx + Math.cos(b) * S).toFixed(1)},${(ry + Math.sin(b) * S).toFixed(1)} L${(rx + Math.cos(a) * L).toFixed(1)},${(ry + Math.sin(a) * L).toFixed(1)} Z"/>`; }).join("");
+  const [ax, ay] = proj([-46, 21]); const [cx, cy] = proj([-5, 39.6]); const [fx, fy] = proj([-11, 22]); const [flx, fly] = proj([-81.6, 31.5]);
+  document.getElementById("chart").innerHTML = `<svg viewBox="0 0 720 ${CH.toFixed(1)}" role="img" aria-label="Sea chart of Columbus's 1492 voyage from Palos to Hispaniola, showing how far you have sailed">
+    <defs><clipPath id="clip"><rect width="720" height="${CH.toFixed(1)}"/></clipPath></defs>
+    <g clip-path="url(#clip)">
+      <g>${rh.join("")}</g>
+      <path class="grid" d="${grid.join(" ")}"/>
+      ${LANDS.map(l => `<polygon class="land" points="${poly(l)}"/>`).join("")}
+      ${ISLES.map(([lon, lat, r]) => { const [x, y] = proj([lon, lat]); return `<circle class="isle" cx="${x}" cy="${y}" r="${r}"/>`; }).join("")}
+      <text class="sea-lbl" x="${ax}" y="${ay}" text-anchor="middle">MAR OCÉANO</text>
+      <text class="land-lbl" x="${cx}" y="${cy}" text-anchor="end">CASTILLA</text>
+      <text class="land-lbl" x="${fx}" y="${fy}" text-anchor="middle">ÁFRICA</text>
+      <text class="land-lbl" x="${flx}" y="${fly}">LA FLORIDA</text>
+      <g class="rose">${star}</g>
+      ${degs.join("")}
+      <polyline class="course" points="${ROUTE.map(w => `${w.x},${w.y}`).join(" ")}"/>
+      <polyline class="sailed" id="sailed" points=""/>
+      ${MILES.map((m, i) => `<circle class="ms" id="ms-${i}" cx="${m.x}" cy="${m.y}" r="3.2"/>
+        <text class="lbl" x="${m.x + m.dx}" y="${m.y + m.dy}" text-anchor="${m.anchor}">${m.name}</text>
+        <text class="lbl-sub" x="${m.x + m.dx}" y="${m.y + m.dy + 10}" text-anchor="${m.anchor}">${m.date}</text>`).join("")}
+      <g id="fleet"></g>
+      <g id="ship">${SHIP}</g>
+    </g></svg>`;
+}
+let shown = 0, anim = null;
+function placeShip(v){
+  const p = posAt(v);
+  document.getElementById("ship").setAttribute("transform", `translate(${p.x.toFixed(1)},${(p.y - 3).toFixed(1)})`);
+  document.getElementById("sailed").setAttribute("points", sailedPoints(v));
+  MILES.forEach((m, i) => document.getElementById("ms-" + i).classList.toggle("hit", v >= m.pts));
+  document.getElementById("leagues").innerHTML = `${Math.round(v).toLocaleString("en-US")} <small>leagues sailed</small>`;
+  const nx = MILES.find(m => m.pts > v);
+  document.getElementById("nextmark").textContent = nx ? `Next landmark: ${nx.name} at ${nx.pts.toLocaleString("en-US")}` : "Voyage complete. You reached La Navidad.";
+}
+function sailTo(target){
+  cancelAnimationFrame(anim);
+  const from = shown, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || Math.abs(target - from) < 1) { shown = target; placeShip(target); return; }
+  const t0 = performance.now(), dur = Math.min(1600, 500 + Math.abs(target - from) * 6);
+  const step = now => { const t = Math.min(1, (now - t0) / dur), e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    shown = from + (target - from) * e; placeShip(shown); if (t < 1) anim = requestAnimationFrame(step); };
+  anim = requestAnimationFrame(step);
+}
+function drawFleet(){
+  const g = document.getElementById("fleet"); if (!g) return;
+  g.innerHTML = mode === "daily" ? fleet.map(v => { const p = posAt(v); return `<circle class="fleet" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3"><title>Another ship: ${v} leagues</title></circle>`; }).join("") : "";
+}
+
+// ---------- shared picks (db) ----------
+let counts = [], totals = [], countsExcl = [], totalsExcl = [], players = 0, fleet = [], db = null, pid = null, canWrite = false, writing = Promise.resolve();
+const DAY_PATH = d => `days/v4-${d}/picks`;
+function tally(docs){
+  counts = []; totals = []; countsExcl = []; totalsExcl = []; players = 0; fleet = [];
+  docs.forEach(d => {
+    const data = d.data() || {}; const picks = data.picks || {}; players++;
+    if (d.id !== pid && typeof data.total === "number") fleet.push(Math.max(0, Math.min(1000, data.total)));
+    Object.entries(picks).forEach(([k, v]) => {
+      const i = +k.slice(1); if (typeof v !== "string") return;
+      counts[i] = counts[i] || {}; counts[i][v] = (counts[i][v] || 0) + 1; totals[i] = (totals[i] || 0) + 1;
+      if (d.id !== pid) { countsExcl[i] = countsExcl[i] || {}; countsExcl[i][v] = (countsExcl[i][v] || 0) + 1; totalsExcl[i] = (totalsExcl[i] || 0) + 1; }
+    });
+  });
+}
+function savePicks(){
+  if (!db || !canWrite || mode !== "daily") return;
+  const picks = {}; state.answers.forEach((a, i) => { if (a && a.key) picks["q" + i] = a.key; });
+  const body = { day: seed, picks, total: total(), answered: state.answers.filter(Boolean).length, at: Date.now() };
+  writing = writing.then(() => db.doc(`${DAY_PATH(seed)}/${pid}`).set(body)).catch(e => { if (e && e.code === "invalid_argument") canWrite = false; });
+}
+async function connect(){
+  try {
+    if (!window.claude || !window.claude.use) return;
+    const [d, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!d) return;
+    db = d;
+    let id = user ? await user.id() : null;
+    if (!id) { id = store.get("meridian:pid", null) || "anon-" + Math.random().toString(36).slice(2, 12); store.set("meridian:pid", id); }
+    pid = String(id).replace(/[^A-Za-z0-9_\-~:@+]/g, "_").slice(0, 150);
+    const w = user && user.can ? await user.can("data.write") : null;
+    canWrite = w !== false;
+    db.collection(DAY_PATH(TODAY)).onSnapshot(snap => {
+      tally(snap.docs); drawFleet();
+      if (mode === "daily" && (state.idx >= qs.length || state.answers[state.idx])) render(false);
+      else { const pc = document.getElementById("players"); if (pc) pc.textContent = playersLabel(); }
+    }, () => {});
+    if (mode === "daily" && state.answers.some(Boolean)) savePicks();
+  } catch (e) { /* play continues with built-in popularity */ }
+}
+const playersLabel = () => db && mode === "daily" ? `${players} ${players === 1 ? "ship" : "ships"} sailing today` : mode === "daily" ? "Sailing solo" : "";
+
+// ---------- storage ----------
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+// ---------- state ----------
+const TODAY = dayNumber();
+let mode, seed, qs, state;
+function startDaily(){ mode = "daily"; seed = TODAY; qs = buildSet(seed); state = store.get("meridian:v4:" + seed, { answers: [], idx: 0 }); shown = 0; render(); drawFleet(); }
+function startPractice(){ mode = "practice"; seed = TODAY + 1 + Math.floor(Math.random() * 5000); qs = buildSet(seed); state = { answers: [], idx: 0 }; shown = 0; render(); drawFleet(); }
+function save(){ if (mode === "daily") store.set("meridian:v4:" + seed, state); }
+const total = () => state.answers.reduce((s, a) => s + (a ? a.pts : 0), 0);
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+
+function recordStats(){
+  const st = store.get("meridian:stats", { played: 0, streak: 0, best: 0, lastDay: null, history: {} });
+  if (st.history[seed] != null) return st;
+  st.history[seed] = total(); st.played++;
+  st.streak = st.lastDay === seed - 1 ? st.streak + 1 : 1; st.lastDay = seed;
+  st.best = Math.max(st.best, st.streak); store.set("meridian:stats", st); return st;
+}
+
+// ---------- render ----------
+const app = document.getElementById("app");
+function renderChrome(){
+  const date = new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  document.getElementById("stamp").innerHTML = mode === "daily" ? `<b>Voyage No. ${seed}</b><br>${date}` : `<span class="practice-tag">Practice voyage</span><br>Not counted`;
+  document.getElementById("ticks").innerHTML = qs.map((_, i) => {
+    const a = state.answers[i]; const cls = a ? "b-" + band(a.pts) : i === state.idx ? "now" : "";
+    return `<div class="tick ${cls}"></div>`;
+  }).join("");
+  sailTo(total());
+}
+
+function render(focus = true){
+  renderChrome();
+  if (state.idx >= qs.length) return renderResults();
+  const q = qs[state.idx], a = state.answers[state.idx];
+  const head = `<div class="qhead"><span class="cat">${q.cat} · <span class="sea d${q.d}">${SEAS[q.d]}</span></span><span id="players">${playersLabel()}</span><span>Leg ${state.idx + 1} of ${qs.length}</span></div>
+    <h2 class="prompt">${esc(q.q)}</h2>${q.sub ? `<p class="sub">${esc(q.sub)}</p>` : ""}`;
+  if (!a) {
+    app.innerHTML = `<section class="card">${head}
+      <form class="ans" id="ans-form" autocomplete="off"><input id="ans-input" placeholder="Type your answer" aria-label="Your answer" autocapitalize="words" spellcheck="false"><button class="btn" id="ans-go">Set sail</button></form>
+      <p class="msg" id="msg">One answer. The rarer it is, the farther you sail.</p>
+      <button class="skip" id="skip">Give up on this leg</button></section>`;
+    const inp = document.getElementById("ans-input"), msg = document.getElementById("msg");
+    document.getElementById("ans-form").addEventListener("submit", e => {
+      e.preventDefault(); const v = inp.value.trim(); if (!v) return;
+      const m = match(v, q);
+      if (!m) { msg.className = "msg warn"; msg.textContent = `“${v}” isn't a place we recognize. Check the spelling and try again.`; inp.select(); return; }
+      if (m.valid) commit({ input: v, key: m.ans.key, label: m.ans.label, pts: pointsFor(q, state.idx, m.ans.key) });
+      else commit({ input: v, key: null, label: m.label, pts: 0 });
+    });
+    document.getElementById("skip").addEventListener("click", () => commit({ input: "", key: null, label: null, pts: 0 }));
+    if (focus) inp.focus({ preventScroll: true });
+    return;
+  }
+  const { p, N, c } = popularity(q, state.idx, false);
+  const real = N >= 5;
+  const ranked = q.answers.slice().sort((x, y) => p[y.key] - p[x.key]);
+  const top = ranked.slice(0, 5);
+  if (a.key && !top.some(t => t.key === a.key)) top.push(q.answers.find(t => t.key === a.key));
+  const bars = top.map(t => {
+    const share = real ? (c[t.key] || 0) / N : p[t.key];
+    return `<li class="${t.key === a.key ? "me" : ""}"><span class="nm">${esc(t.label)}</span><span class="tr"><span class="fl" style="width:${Math.max(2, share * 100).toFixed(1)}%"></span></span><span class="pc">${real ? Math.round(share * 100) + "%" : ""}</span></li>`;
+  }).join("");
+  const rares = ranked.filter(t => t.key !== a.key).slice(-4).reverse();
+  let you, tag;
+  if (a.key) { const n = c[a.key] || 0; you = esc(a.label); tag = real ? `${Math.round(n / N * 100)}% of sailors said this` : n <= 1 ? (mode === "daily" ? "No other sailor has said this yet" : "Practice voyage: scored on expected popularity") : `${n} sailors said this so far`; }
+  else if (a.label) { you = esc(a.label); tag = "Doesn't fit this prompt. Becalmed."; }
+  else { you = "Skipped"; tag = "No answer given. Becalmed."; }
+  const last = state.idx === qs.length - 1;
+  app.innerHTML = `<section class="card">${head}
+    <div class="reveal">
+      <div class="verdict"><div><div class="you">${you}</div><div class="tag">${tag}</div></div><span class="pts c-${band(a.pts)}">+${a.pts}<small>leagues</small></span></div>
+      <p class="h">${real ? `Most given answers · ${N} sailors` : "Expected most common answers"}</p>
+      <ul class="bars">${bars}</ul>
+      <p class="h">Uncharted waters · ${q.answers.length} accepted answers</p>
+      <div class="chips">${rares.map(t => `<span class="chip">${esc(t.label)}</span>`).join("")}</div>
+      <div class="row-end"><button class="btn" id="next">${last ? "Read the ship's log" : "Next leg"} →</button></div>
+    </div></section>`;
+  const nx = document.getElementById("next"); nx.addEventListener("click", next); if (focus) nx.focus({ preventScroll: true });
+}
+
+function commit(ans){ state.answers[state.idx] = ans; save(); savePicks(); render(); }
+function next(){ state.idx++; save(); render(); }
+
+function shareText(){
+  const sq = { rare: "🟨", good: "🟩", common: "🟦", zero: "🟥" };
+  const head = mode === "daily" ? `Meridian voyage No. ${seed}` : "Meridian practice voyage";
+  const reached = MILES.filter(m => m.pts <= total()).pop();
+  return `${head} ⛵ ${total()} leagues, reached ${reached.name.split(",")[0].replace(": land!", "")}\n${state.answers.map(a => sq[band(a.pts)]).join("")}`;
+}
+function voyageLine(t){
+  const reached = MILES.filter(m => m.pts <= t).pop(), nx = MILES.find(m => m.pts > t);
+  const lines = {
+    0: "You never cleared the bar at Palos. The crew is still loading the hold.",
+    120: "You made the Canaries and took on water at La Gomera, but the open ocean still lies ahead.",
+    420: "You pushed deep into the Sargasso Sea, its weed thick around the hull.",
+    590: "Birds overhead! You turned west-southwest, and land can't be far.",
+    700: "Land ho! You made landfall at Guanahaní, just as Columbus did on 12 October.",
+    820: "You sailed past the Bahamas to the green coast of Cuba.",
+    1000: "A perfect crossing: you reached La Navidad on Hispaniola.",
+  };
+  return `${lines[reached.pts]}${nx ? ` ${nx.pts - t} more leagues would have reached ${nx.name.replace(": land!", "")}.` : ""}`;
+}
+
+let timer;
+function renderResults(){
+  const t = total(); const st = mode === "daily" ? recordStats() : null;
+  const hist = st ? Object.values(st.history) : []; const avg = hist.length ? Math.round(hist.reduce((x, y) => x + y, 0) / hist.length) : 0;
+  const ahead = fleet.filter(v => v > t).length;
+  app.innerHTML = `<section class="card">
+    <div class="qhead"><span class="cat">${mode === "daily" ? "The ship's log" : "Practice log"}</span><span>${playersLabel()}</span></div>
+    <div class="score-big"><span class="n">${t}</span><span class="of">of 1,000 leagues</span></div>
+    <p class="rank">${voyageLine(t)}</p>
+    ${mode === "daily" && fleet.length ? `<p class="sub">${ahead === 0 ? "No other ship sailed farther today." : `${ahead} of ${fleet.length} other ${fleet.length === 1 ? "ship" : "ships"} sailed farther today.`}</p>` : ""}
+    <pre class="share" id="share">${shareText()}</pre>
+    <div class="actions">
+      <button class="btn" id="copy">Copy result</button>
+      ${mode === "daily" ? `<button class="btn ghost" id="practice">Sail a practice voyage</button>` : `<button class="btn ghost" id="practice">Another practice voyage</button><button class="btn ghost" id="back">Back to today</button>`}
+    </div>
+    ${mode === "daily" ? `<span class="next" id="countdown"></span>` : ""}
+  </section>
+  ${st ? `<section class="card"><div class="stats">
+    <div class="stat"><span class="v">${st.played}</span><span class="l">Voyages</span></div>
+    <div class="stat"><span class="v">${avg}</span><span class="l">Avg leagues</span></div>
+    <div class="stat"><span class="v">${st.streak}</span><span class="l">Streak</span></div>
+    <div class="stat"><span class="v">${st.best}</span><span class="l">Best streak</span></div>
+  </div></section>` : ""}
+  <section class="card"><div class="qhead"><span>Legs of the voyage</span><span>Leagues when you answered</span></div><ul class="breakdown">
+    ${qs.map((q, i) => { const a = state.answers[i]; return `<li><span class="sw b-${band(a.pts)}"></span><span class="q"><span>${esc(a.label || "Skipped")}${a.label && !a.key ? " ✕" : ""}</span><small>${esc(q.q)}</small></span><span class="p">${a.pts}</span></li>`; }).join("")}
+  </ul></section>`;
+  document.getElementById("copy").addEventListener("click", e => {
+    const btn = e.currentTarget;
+    navigator.clipboard.writeText(shareText()).then(() => { btn.textContent = "Copied"; }).catch(() => {
+      const sel = window.getSelection(), rg = document.createRange(); rg.selectNodeContents(document.getElementById("share")); sel.removeAllRanges(); sel.addRange(rg);
+      btn.textContent = "Selected, press Ctrl+C";
+    });
+  });
+  document.getElementById("practice").addEventListener("click", () => { startPractice(); window.scrollTo({ top: 0 }); });
+  const back = document.getElementById("back"); if (back) back.addEventListener("click", () => { startDaily(); window.scrollTo({ top: 0 }); });
+  clearInterval(timer);
+  const cd = document.getElementById("countdown");
+  if (cd) {
+    const tick = () => { const n = new Date(), m = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); const s = Math.max(0, Math.floor((m - n) / 1000));
+      if (dayNumber() !== TODAY) { cd.textContent = "A new voyage is ready. Reload the page."; return; }
+      cd.textContent = `Next voyage sets sail in ${String(Math.floor(s / 3600)).padStart(2, "0")}:${String(Math.floor(s % 3600 / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; };
+    tick(); timer = setInterval(tick, 1000);
+  }
+}
+
+drawChart();
+startDaily();
+connect();
+</script>
+
+</body>
+</html>
